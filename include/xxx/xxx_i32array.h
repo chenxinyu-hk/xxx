@@ -22,6 +22,7 @@
 
 #ifndef XXX_I32ARRAY_ALLOCATOR
 #  define XXX_I32ARRAY_FREE    XXX_FREE
+#  define XXX_I32ARRAY_MALLOC  XXX_MALLOC
 #  define XXX_I32ARRAY_REALLOC XXX_REALLOC
 #endif
 
@@ -44,8 +45,8 @@ static inline size_t xxx_i32array_capacity(const xxx_i32array_t *self);
 static inline bool xxx_i32array_empty(const xxx_i32array_t *self);
 static inline int *xxx_i32array_data(xxx_i32array_t *self);
 static inline const int *xxx_i32array_data_const(const xxx_i32array_t *self);
-static inline int *xxx_i32array_at(xxx_i32array_t *self, size_t i);
-static inline const int *xxx_i32array_at_const(const xxx_i32array_t *self, size_t i);
+static inline int *xxx_i32array_at(xxx_i32array_t *self, size_t pos);
+static inline const int *xxx_i32array_at_const(const xxx_i32array_t *self, size_t pos);
 static inline int *xxx_i32array_front(xxx_i32array_t *self);
 static inline const int *xxx_i32array_front_const(const xxx_i32array_t *self);
 static inline int *xxx_i32array_back(xxx_i32array_t *self);
@@ -104,12 +105,7 @@ int xxx_i32array_copy(xxx_i32array_t *dst, const xxx_i32array_t *src) {
     if (dst == src) {
         return 0;
     }
-    if (xxx_i32array_reserve(dst, src->len) != 0) {
-        return -1;
-    }
-    memcpy(dst->buf, src->buf, src->len * sizeof(int));
-    dst->len = src->len;
-    return 0;
+    return xxx_i32array_assign(dst, src->buf, src->len);
 }
 
 static inline
@@ -145,19 +141,19 @@ const int *xxx_i32array_data_const(const xxx_i32array_t *self) {
 }
 
 static inline
-int *xxx_i32array_at(xxx_i32array_t *self, size_t i) {
+int *xxx_i32array_at(xxx_i32array_t *self, size_t pos) {
 #if XXX_I32ARRAY_DEBUG
     XXX_I32ARRAY_ASSERT(self->len > 0, "array is empty");
 #endif
-    return &self->buf[i];
+    return &self->buf[pos];
 }
 
 static inline
-const int *xxx_i32array_at_const(const xxx_i32array_t *self, size_t i) {
+const int *xxx_i32array_at_const(const xxx_i32array_t *self, size_t pos) {
 #if XXX_I32ARRAY_DEBUG
     XXX_I32ARRAY_ASSERT(self->len > 0, "array is empty");
 #endif
-    return &self->buf[i];
+    return &self->buf[pos];
 }
 
 static inline
@@ -205,11 +201,23 @@ int xxx_i32array_reserve(xxx_i32array_t *self, size_t n) {
 
 static inline
 int xxx_i32array_assign(xxx_i32array_t *self, const int *arr, size_t len) {
-    if (xxx_i32array_reserve(self, len) != 0) {
+    if (len > XXX_I32ARRAY_CAPACITY_MAX) {
         return -1;
     }
-    memcpy(self->buf, arr, len * sizeof(int));
+    if (len <= self->cap) {
+        memcpy(self->buf, arr, len * sizeof(int));
+        self->len = len;
+        return 0;
+    }
+    int *new_buf = (int *)XXX_I32ARRAY_MALLOC(len * sizeof(int));
+    if (new_buf == NULL) {
+        return -1;
+    }
+    memcpy(new_buf, arr, len * sizeof(int));
+    XXX_I32ARRAY_FREE(self->buf);
+    self->buf = new_buf;
     self->len = len;
+    self->cap = len;
     return 0;
 }
 

@@ -45,9 +45,12 @@ static inline size_t xxx_string_length(const xxx_string_t *self);
 static inline size_t xxx_string_capacity(const xxx_string_t *self);
 static inline bool xxx_string_empty(const xxx_string_t *self);
 static inline char *xxx_string_c_str(xxx_string_t *self);
-static inline char *xxx_string_at(xxx_string_t *self, size_t i);
+static inline char *xxx_string_at(xxx_string_t *self, size_t pos);
+static inline const char *xxx_string_at_const(const xxx_string_t *self, size_t pos);
 static inline char *xxx_string_front(xxx_string_t *self);
+static inline const char *xxx_string_front(const xxx_string_t *self);
 static inline char *xxx_string_back(xxx_string_t *self);
+static inline const char *xxx_string_back(const xxx_string_t *self);
 static inline int xxx_string_reserve(xxx_string_t *self, size_t n);
 static inline int xxx_string_assign(xxx_string_t *self, const char *str, size_t len);
 static inline int xxx_string_append(xxx_string_t *self, const char *str, size_t len);
@@ -72,33 +75,35 @@ typedef struct {
 
 struct xxx_string {
     union {
-        xxx_short_string_t s;
         xxx_long_string_t l;
+        xxx_short_string_t s;
     };
 };
 
 static inline
-int xxx_long_string_grow(xxx_long_string_t *self, size_t new_cap) {
+int xxx_long_string_grow(xxx_string_t *self, size_t new_cap) {
 #if XXX_STRING_DEBUG
+    XXX_STRING_ASSERT(!xxx_string_isshort(self), "string must be long");
     XXX_STRING_ASSERT(
-        new_cap > self->cap,
-        "new capacity %zu must be greater than current capacity %zu", new_cap, self->cap);
+        new_cap > self->l.cap,
+        "new capacity %zu must be greater than current capacity %zu", new_cap, self->l.cap);
     XXX_STRING_ASSERT(
         new_cap <= XXX_STRING_CAPACITY_MAX,
         "new capacity %zu exceeds maximum %zu", new_cap, XXX_STRING_CAPACITY_MAX);
 #endif
-    char *new_buf = (char *)XXX_STRING_REALLOC(self->buf, new_cap + 1);
+    char *new_buf = (char *)XXX_STRING_REALLOC(self->l.buf, new_cap + 1);
     if (new_buf == NULL) {
         return -1;
     }
-    self->buf = new_buf;
-    self->cap = new_cap;
+    self->l.buf = new_buf;
+    self->l.cap = new_cap;
     return 0;
 }
 
 static inline
-int xxx_short_string_grow(xxx_short_string_t *self, size_t new_cap) {
+int xxx_short_string_grow(xxx_string_t *self, size_t new_cap) {
 #if XXX_STRING_DEBUG
+    XXX_STRING_ASSERT(xxx_string_isshort(self), "string must be short");
     XXX_STRING_ASSERT(
         new_cap > 22,
         "new capacity %zu must be greater than current capacity 22", new_cap);
@@ -110,12 +115,11 @@ int xxx_short_string_grow(xxx_short_string_t *self, size_t new_cap) {
     if (new_buf == NULL) {
         return -1;
     }
-    size_t len = self->len & 0x7f;
-    memcpy(new_buf, self->buf, len);
-    xxx_long_string_t *lstr = (xxx_long_string_t *)self;
-    lstr->buf = new_buf;
-    lstr->len = len;
-    lstr->cap = new_cap;
+    size_t len = self->s.len & 0x7f;
+    memcpy(new_buf, self->s.buf, len);
+    self->l.buf = new_buf;
+    self->l.len = len;
+    self->l.cap = new_cap;
     return 0;
 }
 
@@ -132,11 +136,10 @@ int xxx_string_init(xxx_string_t *self) {
 
 static inline
 void xxx_string_deinit(xxx_string_t *self) {
-    if (xxx_string_isshort(self)) {
-        return;
+    if (!xxx_string_isshort(self)) {
+        XXX_STRING_FREE(self->l.buf);
+        self->l.buf = NULL;
     }
-    XXX_STRING_FREE(self->l.buf);
-    self->l.buf = NULL;
 }
 
 static inline
@@ -145,10 +148,13 @@ int xxx_string_copy(xxx_string_t *dst, const xxx_string_t *src) {
         return 0;
     }
     if (xxx_string_isshort(src)) {
-        if (!xxx_string_isshort(dst)) {
-            XXX_STRING_FREE(dst->l.buf);
+        if (xxx_string_isshort(dst)) {
+            *dst = *src;
+            return 0;
         }
-        *dst = *src;
+        size_t len = src->s.len & 0x7f;
+        memcpy(dst->l.buf, src->s.buf, len);
+        dst->l.len = len;
         return 0;
     }
     size_t len = src->l.len;
@@ -206,26 +212,37 @@ bool xxx_string_empty(const xxx_string_t *self) {
 static inline
 char *xxx_string_c_str(xxx_string_t *self) {
     if (xxx_string_isshort(self)) {
-        xxx_short_string_t *sstr = &self->s;
-        sstr->buf[sstr->len & 0x7f] = '\0';
-        return sstr->buf;
+        self->s.buf[self->s.len & 0x7f] = '\0';
+        return self->s.buf;
     }
-    xxx_long_string_t *lstr = &self->l;
-    lstr->buf[lstr->len] = '\0';
-    return lstr->buf;
+    self->l.buf[self->l.len] = '\0';
+    return self->l.buf;
 }
 
 static inline
-char *xxx_string_at(xxx_string_t *self, size_t i) {
+char *xxx_string_at(xxx_string_t *self, size_t pos) {
 #if XXX_STRING_DEBUG
     XXX_STRING_ASSERT(
         i < xxx_string_length(self),
         "index %zu out of range [0, %zu)", i, xxx_string_length(self));
 #endif
     if (xxx_string_isshort(self)) {
-        return &self->s.buf[i];
+        return &self->s.buf[pos];
     }
-    return &self->l.buf[i];
+    return &self->l.buf[pos];
+}
+
+static inline
+const char *xxx_string_at_const(const xxx_string_t *self, size_t pos) {
+#if XXX_STRING_DEBUG
+    XXX_STRING_ASSERT(
+        i < xxx_string_length(self),
+        "index %zu out of range [0, %zu)", i, xxx_string_length(self));
+#endif
+    if (xxx_string_isshort(self)) {
+        return &self->s.buf[pos];
+    }
+    return &self->l.buf[pos]; 
 }
 
 static inline
@@ -240,16 +257,36 @@ char *xxx_string_front(xxx_string_t *self) {
 }
 
 static inline
+const char *xxx_string_front(const xxx_string_t *self) {
+#if XXX_STRING_DEBUG
+    XXX_STRING_ASSERT(!xxx_string_empty(self), "string is empty");
+#endif
+    if (xxx_string_isshort(self)) {
+        return &self->s.buf[0];
+    }
+    return &self->l.buf[0];   
+}
+
+static inline
 char *xxx_string_back(xxx_string_t *self) {
 #if XXX_STRING_DEBUG
     XXX_STRING_ASSERT(!xxx_string_empty(self), "string is empty");
 #endif
     if (xxx_string_isshort(self)) {
-        xxx_short_string_t *sstr = &self->s;
-        return &sstr->buf[(sstr->len & 0x7f) - 1];
+        return &self->s.buf[(self->s.len & 0x7f) - 1];
     }
-    xxx_long_string_t *lstr = &self->l;
-    return &lstr->buf[lstr->len - 1];
+    return &self->l.buf[self->l.len - 1];
+}
+
+static inline
+const char *xxx_string_back(const xxx_string_t *self) {
+#if XXX_STRING_DEBUG
+    XXX_STRING_ASSERT(!xxx_string_empty(self), "string is empty");
+#endif
+    if (xxx_string_isshort(self)) {
+        return &self->s.buf[(self->s.len & 0x7f) - 1];
+    }
+    return &self->l.buf[self->l.len - 1];
 }
 
 static inline
@@ -258,134 +295,129 @@ int xxx_string_reserve(xxx_string_t *self, size_t n) {
         return -1;
     }
     if (xxx_string_isshort(self)) {
-        xxx_short_string_t *sstr = &self->s;
         if (n <= 22) {
             return 0;
         }
-        return xxx_short_string_grow(sstr, n);
+        return xxx_short_string_grow(self, n);
     }
-    xxx_long_string_t *lstr = &self->l;
-    if (n <= lstr->cap) {
+    if (n <= self->l.cap) {
         return 0;
     }
-    return xxx_long_string_grow(lstr, n);
+    return xxx_long_string_grow(self, n);
 }
 
-static inline
-int xxx_string_assign(xxx_string_t *self, const char *str, size_t len) {
-    bool is_short = xxx_string_isshort(self);
-    if (is_short) {
-        xxx_short_string_t *sstr = &self->s;
-        if (len <= 22) {
-            memcpy(sstr->buf, str, len);
-            sstr->len = len | 0x80;
-            return 0;
-        }
-    } else {
-        xxx_long_string_t *lstr = &self->l;
-        if (len <= lstr->cap) {
-            memcpy(lstr->buf, str, len);
-            lstr->len = len;
-            return 0;
-        }
-    }
-    if (len > XXX_STRING_CAPACITY_MAX) {
-        return -1;
-    }
-    char *new_buf = (char *)XXX_STRING_MALLOC(len + 1);
-    if (new_buf == NULL) {
-        return -1;
-    }
-    memcpy(new_buf, str, len);
-    xxx_long_string_t *lstr = &self->l;
-    if (!is_short) {
-        XXX_STRING_FREE(lstr->buf);
-    }
-    lstr->buf = new_buf;
-    lstr->len = len;
-    lstr->cap = len;
-    return 0;
-}
+// static inline
+// int xxx_string_assign(xxx_string_t *self, const char *str, size_t len) {
+//     bool is_short = xxx_string_isshort(self);
+//     if (is_short) {
+//         xxx_short_string_t *sstr = &self->s;
+//         if (len <= 22) {
+//             memcpy(sstr->buf, str, len);
+//             sstr->len = len | 0x80;
+//             return 0;
+//         }
+//     } else {
+//         xxx_long_string_t *lstr = &self->l;
+//         if (len <= lstr->cap) {
+//             memcpy(lstr->buf, str, len);
+//             lstr->len = len;
+//             return 0;
+//         }
+//     }
+//     if (len > XXX_STRING_CAPACITY_MAX) {
+//         return -1;
+//     }
+//     char *new_buf = (char *)XXX_STRING_MALLOC(len + 1);
+//     if (new_buf == NULL) {
+//         return -1;
+//     }
+//     memcpy(new_buf, str, len);
+//     xxx_long_string_t *lstr = &self->l;
+//     if (!is_short) {
+//         XXX_STRING_FREE(lstr->buf);
+//     }
+//     lstr->buf = new_buf;
+//     lstr->len = len;
+//     lstr->cap = len;
+//     return 0;
+// }
 
-static inline
-int xxx_string_append(xxx_string_t *self, const char *str, size_t len) {
-    char *buf;
-    if (xxx_string_isshort(self)) {
-        xxx_short_string_t *sstr = &self->s;
-        size_t len = sstr->len & 0x7f;
-        if (len > XXX_STRING_CAPACITY_MAX - len) {
-            return -1;
-        }
-        buf = sstr->buf;
-        size_t new_len = len + len;
-        if (new_len <= 22) {
-            memcpy(sstr->buf + len, str, len);
-            sstr->len += len;
-            return 0;
-        }
-        size_t new_cap = 44;
-        if (new_cap < new_len) {
-            new_cap = new_len;
-        }
-        if (xxx_short_string_grow(sstr, new_cap) != 0) {
-            return -1;
-        }
-    } else {
-        xxx_long_string_t *lstr = &self->l;
-        if (len > XXX_STRING_CAPACITY_MAX - lstr->len) {
-            return -1;
-        }
-        buf = lstr->buf;
-        size_t new_len = lstr->len + len;
-        if (new_len > lstr->cap) {
-            size_t new_cap = lstr->cap << 1;
-            if (new_cap < new_len || new_cap > XXX_STRING_CAPACITY_MAX) {
-                new_cap = new_len;
-            }
-            if (xxx_long_string_grow(lstr, new_cap) != 0) {
-                return -1;
-            }
-        }
-    }
-    xxx_long_string_t *lstr = &self->l;
-    if (str >= buf && str < buf + lstr->len) {
-        str = lstr->buf + (str - buf);
-    }
-    memcpy(lstr->buf + lstr->len, str, len);
-    lstr->len += len;
-    return 0;
-}
+// static inline
+// int xxx_string_append(xxx_string_t *self, const char *str, size_t len) {
+//     char *buf;
+//     if (xxx_string_isshort(self)) {
+//         // xxx_short_string_t *sstr = &self->s;
+//         size_t len = self->s.len & 0x7f;
+//         if (len > XXX_STRING_CAPACITY_MAX - len) {
+//             return -1;
+//         }
+//         buf = self->s.buf;
+//         size_t new_len = len + len;
+//         if (new_len <= 22) {
+//             memcpy(self->s.buf + len, str, len);
+//             self->s.len += len;
+//             return 0;
+//         }
+//         size_t new_cap = 44;
+//         if (new_cap < new_len) {
+//             new_cap = new_len;
+//         }
+//         if (xxx_short_string_grow(self, new_cap) != 0) {
+//             return -1;
+//         }
+//     } else {
+//         xxx_long_string_t *lstr = &self->l;
+//         if (len > XXX_STRING_CAPACITY_MAX - lstr->len) {
+//             return -1;
+//         }
+//         buf = lstr->buf;
+//         size_t new_len = lstr->len + len;
+//         if (new_len > lstr->cap) {
+//             size_t new_cap = lstr->cap << 1;
+//             if (new_cap < new_len || new_cap > XXX_STRING_CAPACITY_MAX) {
+//                 new_cap = new_len;
+//             }
+//             if (xxx_long_string_grow(lstr, new_cap) != 0) {
+//                 return -1;
+//             }
+//         }
+//     }
+//     xxx_long_string_t *lstr = &self->l;
+//     if (str >= buf && str < buf + lstr->len) {
+//         str = lstr->buf + (str - buf);
+//     }
+//     memcpy(lstr->buf + lstr->len, str, len);
+//     lstr->len += len;
+//     return 0;
+// }
 
 static inline
 int xxx_string_push_back(xxx_string_t *self, char c) {
     if (xxx_string_isshort(self)) {
-        xxx_short_string_t *sstr = &self->s;
-        size_t len = sstr->len & 0x7f;
+        size_t len = self->s.len & 0x7f;
         if (len < 22) {
-            sstr->buf[len] = c;
-            ++sstr->len;
+            self->s.buf[len] = c;
+            ++self->s.len;
             return 0;
         }
-        if (xxx_short_string_grow(sstr, 44) != 0) {
+        if (xxx_short_string_grow(self, 44) != 0) {
             return -1;
         }
     } else {
-        xxx_long_string_t *lstr = &self->l;
-        if (lstr->len == lstr->cap) {
-            if (lstr->cap == XXX_STRING_CAPACITY_MAX) {
+        if (self->l.len == self->l.cap) {
+            if (self->l.cap == XXX_STRING_CAPACITY_MAX) {
                 return -1;
             }
-            size_t new_cap = lstr->cap << 1;
+            size_t new_cap = self->l.cap << 1;
             if (new_cap > XXX_STRING_CAPACITY_MAX) {
                 new_cap = XXX_STRING_CAPACITY_MAX;
             }
-            if (xxx_long_string_grow(lstr, new_cap) != 0) {
+            if (xxx_long_string_grow(self, new_cap) != 0) {
                 return -1;
             }
         }
     }
-    xxx_long_string_t *lstr = &self->l;
-    lstr->buf[lstr->len++] = c;
+    self->l.buf[self->l.len++] = c;
     return 0;
 }
 

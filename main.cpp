@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 #include <unordered_set>
+#include <bitset>
 
 #include "xxx/xxx_string.h"
 #include "xxx/xxx_array.h"
@@ -15,5 +16,9 @@ int main() {
     xxx_string_assign(&s, "abcde", 5);
     xxx_string_append(&s, xxx_string_c_str(&s), xxx_string_length(&s));
     printf("%zu %s\n", xxx_string_length(&s), xxx_string_c_str(&s));
+    std::bitset<100> bs;
+    bs.set(1);
+    vector<int> v;
+    v.at(1);
 }
 

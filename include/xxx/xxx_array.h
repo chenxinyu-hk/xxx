@@ -43,7 +43,7 @@ static inline size_t xxx_array_length(const xxx_array_t *self);
 static inline size_t xxx_array_capacity(const xxx_array_t *self);
 static inline bool xxx_array_empty(const xxx_array_t *self);
 static inline void **xxx_array_data(xxx_array_t *self);
-static inline void **xxx_array_at(xxx_array_t *self, size_t i);
+static inline void **xxx_array_at(xxx_array_t *self, size_t pos);
 static inline void **xxx_array_front(xxx_array_t *self);
 static inline void **xxx_array_back(xxx_array_t *self);
 static inline int xxx_array_reserve(xxx_array_t *self, size_t n);
@@ -135,13 +135,13 @@ void **xxx_array_data(xxx_array_t *self) {
 }
 
 static inline
-void **xxx_array_at(xxx_array_t *self, size_t i) {
+void **xxx_array_at(xxx_array_t *self, size_t pos) {
 #if XXX_ARRAY_DEBUG
     XXX_ARRAY_ASSERT(
         i < self->len,
         "index %zu out of range [0, %zu)", i, self->len);
 #endif
-    return &self->buf[i];
+    return &self->buf[pos];
 }
 
 static inline
