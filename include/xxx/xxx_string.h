@@ -81,6 +81,11 @@ struct xxx_string {
 };
 
 static inline
+int xxx_string_isshort(const xxx_string_t *self) {
+    return (self->s.len & 0x80) != 0;
+}
+
+static inline
 int xxx_long_string_grow(xxx_string_t *self, size_t new_cap) {
 #if XXX_STRING_DEBUG
     XXX_STRING_ASSERT(!xxx_string_isshort(self), "string must be long");
@@ -121,11 +126,6 @@ int xxx_short_string_grow(xxx_string_t *self, size_t new_cap) {
     self->l.len = len;
     self->l.cap = new_cap;
     return 0;
-}
-
-static inline
-int xxx_string_isshort(const xxx_string_t *self) {
-    return (self->s.len & 0x80) != 0;
 }
 
 static inline
@@ -223,8 +223,8 @@ static inline
 char *xxx_string_at(xxx_string_t *self, size_t pos) {
 #if XXX_STRING_DEBUG
     XXX_STRING_ASSERT(
-        i < xxx_string_length(self),
-        "index %zu out of range [0, %zu)", i, xxx_string_length(self));
+        pos < xxx_string_length(self),
+        "index %zu out of range [0, %zu)", pos, xxx_string_length(self));
 #endif
     if (xxx_string_isshort(self)) {
         return &self->s.buf[pos];
@@ -236,8 +236,8 @@ static inline
 const char *xxx_string_at_const(const xxx_string_t *self, size_t pos) {
 #if XXX_STRING_DEBUG
     XXX_STRING_ASSERT(
-        i < xxx_string_length(self),
-        "index %zu out of range [0, %zu)", i, xxx_string_length(self));
+        pos < xxx_string_length(self),
+        "index %zu out of range [0, %zu)", pos, xxx_string_length(self));
 #endif
     if (xxx_string_isshort(self)) {
         return &self->s.buf[pos];

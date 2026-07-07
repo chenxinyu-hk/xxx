@@ -138,8 +138,8 @@ static inline
 void **xxx_array_at(xxx_array_t *self, size_t pos) {
 #if XXX_ARRAY_DEBUG
     XXX_ARRAY_ASSERT(
-        i < self->len,
-        "index %zu out of range [0, %zu)", i, self->len);
+        pos < self->len,
+        "index %zu out of range [0, %zu)", pos, self->len);
 #endif
     return &self->buf[pos];
 }

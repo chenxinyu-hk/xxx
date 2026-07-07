@@ -62,6 +62,11 @@ size_t xxx_bitset_align(size_t n) {
 }
 
 static inline
+bool xxx_bitset_isshort(const xxx_bitset_t *self) {
+    return (self->s.words[1] >> 63) & 1;
+}
+
+static inline
 int xxx_long_bitset_grow(xxx_bitset_t *self, size_t new_cap) {
     size_t new_nwords = new_cap >> 6;
     uint64_t *new_words = (uint64_t *)XXX_BITSET_REALLOC(self->l.words, new_nwords * sizeof(uint64_t));
@@ -88,11 +93,6 @@ int xxx_short_bitset_grow(xxx_bitset_t *self, size_t new_cap) {
     self->l.words = new_words;
     self->l.cap = new_cap;
     return 0;
-}
-
-static inline
-bool xxx_bitset_isshort(const xxx_bitset_t *self) {
-    return (self->s.words[1] >> 63) & 1;
 }
 
 static inline
@@ -263,11 +263,12 @@ int xxx_bitset_reset(xxx_bitset_t *self, size_t pos) {
         if (pos < 127) {
             self->s.words[pos >> 6] &= ~(1ULL << (pos & 63));
         }
-        return;
+        return 0;
     }
     if (pos < self->l.cap) {
         self->l.words[pos >> 6] &= ~(1ULL << (pos & 63));
     }
+    return 0;
 }
 
 static inline

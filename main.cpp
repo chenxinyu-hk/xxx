@@ -9,6 +9,7 @@
 #include "xxx/xxx_i32array.h"
 #include "xxx/xxx_stack.h"
 #include "xxx/xxx_i32stack.h"
+#include "xxx/xxx_bitset.h"
 
 int main() {
     xxx_string_t s;
@@ -18,7 +19,7 @@ int main() {
     printf("%zu %s\n", xxx_string_length(&s), xxx_string_c_str(&s));
     std::bitset<100> bs;
     bs.set(1);
-    vector<int> v;
+    std::vector<int> v;
     v.at(1);
 }
 
