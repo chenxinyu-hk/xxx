@@ -73,10 +73,12 @@ int xxx_i32array_grow(xxx_i32array_t *self, size_t new_cap) {
     XXX_I32ARRAY_ASSERT(
         new_cap > self->cap,
         "new capacity %zu must be greater than current capacity %zu", new_cap, self->cap);
+
     XXX_I32ARRAY_ASSERT(
         new_cap <= XXX_I32ARRAY_CAPACITY_MAX,
-        "new capacity %zu exceeds maximum %zu", new_cap, XXX_I32ARRAY_CAPACITY_MAX);
+        "new capacity %zu exceeds maximum capacity %zu", new_cap, XXX_I32ARRAY_CAPACITY_MAX);
 #endif
+
     int *new_buf = (int *)XXX_I32ARRAY_REALLOC(self->buf, new_cap * sizeof(int));
     if (new_buf == NULL) {
         return -1;
@@ -143,16 +145,22 @@ const int *xxx_i32array_data_const(const xxx_i32array_t *self) {
 static inline
 int *xxx_i32array_at(xxx_i32array_t *self, size_t pos) {
 #if XXX_I32ARRAY_DEBUG
-    XXX_I32ARRAY_ASSERT(self->len > 0, "array is empty");
+    XXX_I32ARRAY_ASSERT(
+        pos < self->len,
+        "index %zu out of range [0, %zu)", pos, self->len);
 #endif
+
     return &self->buf[pos];
 }
 
 static inline
 const int *xxx_i32array_at_const(const xxx_i32array_t *self, size_t pos) {
 #if XXX_I32ARRAY_DEBUG
-    XXX_I32ARRAY_ASSERT(self->len > 0, "array is empty");
+    XXX_I32ARRAY_ASSERT(
+        pos < self->len,
+        "index %zu out of range [0, %zu)", pos, self->len);
 #endif
+
     return &self->buf[pos];
 }
 
@@ -161,6 +169,7 @@ int *xxx_i32array_front(xxx_i32array_t *self) {
 #if XXX_I32ARRAY_DEBUG
     XXX_I32ARRAY_ASSERT(self->len > 0, "array is empty");
 #endif
+
     return &self->buf[0];
 }
 
@@ -169,6 +178,7 @@ const int *xxx_i32array_front_const(const xxx_i32array_t *self) {
 #if XXX_I32ARRAY_DEBUG
     XXX_I32ARRAY_ASSERT(self->len > 0, "array is empty");
 #endif
+
     return &self->buf[0];
 }
 
@@ -177,6 +187,7 @@ int *xxx_i32array_back(xxx_i32array_t *self) {
 #if XXX_I32ARRAY_DEBUG
     XXX_I32ARRAY_ASSERT(self->len > 0, "array is empty");
 #endif
+
     return &self->buf[self->len - 1];
 }
 
@@ -185,6 +196,7 @@ const int *xxx_i32array_back_const(const xxx_i32array_t *self) {
 #if XXX_I32ARRAY_DEBUG
     XXX_I32ARRAY_ASSERT(self->len > 0, "array is empty");
 #endif
+
     return &self->buf[self->len - 1];   
 }
 
@@ -199,6 +211,9 @@ int xxx_i32array_reserve(xxx_i32array_t *self, size_t n) {
     return xxx_i32array_grow(self, n);
 }
 
+/*
+ * Undefined behavior if arr overlaps the contents of self.
+ */
 static inline
 int xxx_i32array_assign(xxx_i32array_t *self, const int *arr, size_t len) {
     if (len > XXX_I32ARRAY_CAPACITY_MAX) {
@@ -227,7 +242,7 @@ int xxx_i32array_push_back(xxx_i32array_t *self, int x) {
         if (self->cap == XXX_I32ARRAY_CAPACITY_MAX) {
             return -1;
         }
-        size_t new_cap = self->cap > 8 ? self->cap << 1 : 16;
+        size_t new_cap = self->cap > 8 ? self->cap * 2 : 16;
         if (self->cap > XXX_I32ARRAY_CAPACITY_MAX) {
             new_cap = XXX_I32ARRAY_CAPACITY_MAX;
         }
@@ -244,6 +259,7 @@ void xxx_i32array_pop_back(xxx_i32array_t *self) {
 #if XXX_I32ARRAY_DEBUG
     XXX_I32ARRAY_ASSERT(self->len > 0, "array is empty");
 #endif
+
     --self->len;
 }
 

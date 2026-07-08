@@ -80,6 +80,7 @@ void **xxx_stack_top(xxx_stack_t *self) {
 #if XXX_STACK_DEBUG
     XXX_STACK_ASSERT(!xxx_stack_empty(self), "stack is empty");
 #endif
+
     return xxx_array_back(&self->arr);
 }
 
@@ -93,6 +94,7 @@ void xxx_stack_pop(xxx_stack_t *self) {
 #if XXX_STACK_DEBUG
     XXX_STACK_ASSERT(!xxx_stack_empty(self), "stack underflow");
 #endif
+
     xxx_array_pop_back(&self->arr);
 }
 

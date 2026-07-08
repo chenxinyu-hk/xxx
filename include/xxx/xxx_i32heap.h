@@ -70,6 +70,7 @@ void xxx_i32maxheap_sift_up(int *arr, size_t len, size_t i) {
 #if XXX_I32HEAP_DEBUG
     XXX_I32HEAP_ASSERT(i < len, "index %zu out of range [0, %zu)", i, len);
 #endif
+
     int target = arr[i];
     size_t curr = i;
     while (curr > 0) {
@@ -88,6 +89,7 @@ void xxx_i32maxheap_sift_down(int *arr, size_t len, size_t i) {
 #if XXX_I32HEAP_DEBUG
     XXX_I32HEAP_ASSERT(i < len, "index %zu out of range [0, %zu)", i, len);
 #endif
+
     int target = arr[i];
     size_t curr = i;
     size_t half = len / 2;
@@ -165,6 +167,7 @@ const int *xxx_i32maxheap_top(const xxx_i32maxheap_t *self) {
 #if XXX_I32HEAP_DEBUG
     XXX_I32HEAP_ASSERT(!xxx_i32maxheap_empty(self), "heap is empty");
 #endif
+
     return xxx_i32array_front_const(&self->arr);
 }
 
@@ -184,6 +187,7 @@ void xxx_i32maxheap_pop(xxx_i32maxheap_t *self) {
 #if XXX_I32HEAP_DEBUG
     XXX_I32HEAP_ASSERT(!xxx_i32maxheap_empty(self), "heap is empty");
 #endif
+
     *xxx_i32array_front(&self->arr) = *xxx_i32array_back(&self->arr);
     xxx_i32array_pop_back(&self->arr);
     if (!xxx_i32array_empty(&self->arr)) {
@@ -206,6 +210,7 @@ void xxx_i32minheap_sift_up(int *arr, size_t len, size_t i) {
 #if XXX_I32HEAP_DEBUG
     XXX_I32HEAP_ASSERT(i < len, "index %zu out of range [0, %zu)", i, len);
 #endif
+
     int target = arr[i];
     size_t curr = i;
     while (curr > 0) {
@@ -224,6 +229,7 @@ void xxx_i32minheap_sift_down(int *arr, size_t len, size_t i) {
 #if XXX_I32HEAP_DEBUG
     XXX_I32HEAP_ASSERT(i < len, "index %zu out of range [0, %zu)", i, len);
 #endif
+
     int target = arr[i];
     size_t curr = i;
     size_t half = len / 2;
@@ -301,6 +307,7 @@ const int *xxx_i32minheap_top(const xxx_i32minheap_t *self) {
 #if XXX_I32HEAP_DEBUG
     XXX_I32HEAP_ASSERT(!xxx_i32minheap_empty(self), "heap is empty");
 #endif
+
     return xxx_i32array_front_const(&self->arr);
 }
 
@@ -320,6 +327,7 @@ void xxx_i32minheap_pop(xxx_i32minheap_t *self) {
 #if XXX_I32HEAP_DEBUG
     XXX_I32HEAP_ASSERT(!xxx_i32minheap_empty(self), "heap is empty");
 #endif
+
     *xxx_i32array_front(&self->arr) = *xxx_i32array_back(&self->arr);
     xxx_i32array_pop_back(&self->arr);
     if (!xxx_i32array_empty(&self->arr)) {

@@ -80,6 +80,7 @@ int *xxx_i32stack_top(xxx_i32stack_t *self) {
 #if XXX_I32STACK_DEBUG
     XXX_I32STACK_ASSERT(!xxx_i32stack_empty(self), "stack is empty");
 #endif
+
     return xxx_i32array_back(&self->arr);
 }
 
@@ -93,6 +94,7 @@ void xxx_i32stack_pop(xxx_i32stack_t *self) {
 #if XXX_I32STACK_DEBUG
     XXX_I32STACK_ASSERT(!xxx_i32stack_empty(self), "stack underflow");
 #endif
+
     xxx_i32array_pop_back(&self->arr);
 }
 
