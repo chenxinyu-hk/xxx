@@ -30,14 +30,6 @@ int xxx_strtoi64(int64_t *out, const char *str, size_t len) {
     //     return -1;
     // }
 
-
-
-
-
-    
-
-
-    
     if (i == len) {
         return -1;
     }
