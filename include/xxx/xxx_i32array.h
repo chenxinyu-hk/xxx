@@ -5,15 +5,12 @@
 #include <stddef.h>
 #include <string.h>
 
+#include "xxx_config.h"
 #include "xxx_allocator.h"
 #include "xxx_assert.h"
 
 #ifndef XXX_I32ARRAY_DEBUG
-#  ifdef DEBUG
-#    define XXX_I32ARRAY_DEBUG 1
-#  else
-#    define XXX_I32ARRAY_DEBUG 0
-#  endif
+#  define XXX_I32ARRAY_DEBUG XXX_DEBUG
 #endif
 
 #ifndef XXX_I32ARRAY_ASSERT
@@ -219,7 +216,7 @@ int xxx_i32array_assign(xxx_i32array_t *self, const int *arr, size_t len) {
     if (len > XXX_I32ARRAY_CAPACITY_MAX) {
         return -1;
     }
-    if (len <= self->cap) {
+    if (self->cap >= len) {
         memcpy(self->buf, arr, len * sizeof(int));
         self->len = len;
         return 0;

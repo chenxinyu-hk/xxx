@@ -3,16 +3,12 @@
 
 #include <stdbool.h>
 
+#include "xxx_config.h"
 #include "xxx_assert.h"
 #include "xxx_i32array.h"
 
-
 #ifndef XXX_I32HEAP_DEBUG
-#  ifdef DEBUG
-#    define XXX_I32HEAP_DEBUG 1
-#  else
-#    define XXX_I32HEAP_DEBUG 0
-#  endif
+#  define XXX_I32HEAP_DEBUG XXX_DEBUG
 #endif
 
 #ifndef XXX_I32HEAP_ASSERT

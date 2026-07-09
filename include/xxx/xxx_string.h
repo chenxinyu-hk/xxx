@@ -6,15 +6,12 @@
 #include <stdint.h>
 #include <string.h>
 
+#include "xxx_config.h"
 #include "xxx_allocator.h"
 #include "xxx_assert.h"
 
 #ifndef XXX_STRING_DEBUG
-#  ifdef DEBUG
-#    define XXX_STRING_DEBUG 1
-#  else
-#    define XXX_STRING_DEBUG 0
-#  endif
+#  define XXX_STRING_DEBUG XXX_DEBUG
 #endif
 
 #ifndef XXX_STRING_ASSERT
@@ -27,7 +24,7 @@
 #  define XXX_STRING_REALLOC XXX_REALLOC
 #endif
 
-#define XXX_STRING_CAPACITY_MAX ((size_t)0x7ffffffe)
+#define XXX_STRING_CAPACITY_MAX ((size_t)0x7fffffff)
 
 // #define XXX_STRING_INITIALIZER {{0}, 0x80}
 

@@ -5,15 +5,12 @@
 #include <stddef.h>
 #include <string.h>
 
+#include "xxx_config.h"
 #include "xxx_allocator.h"
 #include "xxx_assert.h"
 
 #ifndef XXX_ARRAY_DEBUG
-#  ifdef DEBUG
-#    define XXX_ARRAY_DEBUG 1
-#  else
-#    define XXX_ARRAY_DEBUG 0
-#  endif
+#  define XXX_ARRAY_DEBUG XXX_DEBUG
 #endif
 
 #ifndef XXX_ARRAY_ASSERT
@@ -22,6 +19,7 @@
 
 #ifndef XXX_ARRAY_ALLOCATOR
 #  define XXX_ARRAY_FREE    XXX_FREE
+#  define XXX_ARRAY_MALLOC  XXX_MALLOC
 #  define XXX_ARRAY_REALLOC XXX_REALLOC
 #endif
 
@@ -67,10 +65,12 @@ int xxx_array_grow(xxx_array_t *self, size_t new_cap) {
     XXX_ARRAY_ASSERT(
         new_cap > self->cap,
         "new capacity %zu must be greater than current capacity %zu", new_cap, self->cap);
+
     XXX_ARRAY_ASSERT(
         new_cap <= XXX_ARRAY_CAPACITY_MAX,
-        "new capacity %zu exceeds maximum %zu", new_cap, XXX_ARRAY_CAPACITY_MAX);
+        "new capacity %zu exceeds maximum capacity %zu", new_cap, XXX_ARRAY_CAPACITY_MAX);
 #endif
+
     void **new_buf = (void **)XXX_ARRAY_REALLOC(self->buf, new_cap * sizeof(void *));
     if (new_buf == NULL) {
         return -1;
@@ -99,11 +99,20 @@ int xxx_array_copy(xxx_array_t *dst, const xxx_array_t *src) {
     if (dst == src) {
         return 0;
     }
-    if (xxx_array_reserve(dst, src->len) != 0) {
+    if (dst->cap >= src->len) {
+        memcpy(dst->buf, src->buf, src->len * sizeof(void *));
+        dst->len = src->len;
+        return 0;
+    }
+    void **new_buf = (void **)XXX_ARRAY_MALLOC(src->len * sizeof(void *));
+    if (new_buf == NULL) {
         return -1;
     }
-    memcpy(dst->buf, src->buf, src->len * sizeof(void *));
+    memcpy(new_buf, src->buf, src->len * sizeof(void *));
+    XXX_ARRAY_FREE(dst->buf);
+    dst->buf = new_buf;
     dst->len = src->len;
+    dst->cap = src->len;
     return 0;
 }
 
@@ -141,6 +150,7 @@ void **xxx_array_at(xxx_array_t *self, size_t pos) {
         pos < self->len,
         "index %zu out of range [0, %zu)", pos, self->len);
 #endif
+
     return &self->buf[pos];
 }
 
@@ -149,6 +159,7 @@ void **xxx_array_front(xxx_array_t *self) {
 #if XXX_ARRAY_DEBUG
     XXX_ARRAY_ASSERT(self->len > 0, "array is empty");
 #endif
+
     return &self->buf[0];
 }
 
@@ -157,6 +168,7 @@ void **xxx_array_back(xxx_array_t *self) {
 #if XXX_ARRAY_DEBUG
     XXX_ARRAY_ASSERT(self->len > 0, "array is empty");
 #endif
+
     return &self->buf[self->len - 1];
 }
 
@@ -194,6 +206,7 @@ void xxx_array_pop_back(xxx_array_t *self) {
 #if XXX_ARRAY_DEBUG
     XXX_ARRAY_ASSERT(self->len > 0, "array is empty");
 #endif
+
     --self->len;
 }
 

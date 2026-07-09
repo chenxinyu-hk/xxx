@@ -6,15 +6,12 @@
 #include <stdint.h>
 #include <string.h>
 
+#include "xxx_config.h"
 #include "xxx_allocator.h"
 #include "xxx_assert.h"
 
 #ifndef XXX_BITSET_DEBUG
-#  ifdef DEBUG
-#    define XXX_BITSET_DEBUG 1
-#  else
-#    define XXX_BITSET_DEBUG 0
-#  endif
+#  define XXX_BITSET_DEBUG XXX_DEBUG
 #endif
 
 #ifndef XXX_BITSET_ASSERT

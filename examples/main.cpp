@@ -14,12 +14,12 @@
 int main() {
     xxx_string_t s;
     xxx_string_init(&s);
-    xxx_string_assign(&s, "abcde", 5);
-    xxx_string_append(&s, xxx_string_c_str(&s), xxx_string_length(&s));
-    printf("%zu %s\n", xxx_string_length(&s), xxx_string_c_str(&s));
-    std::bitset<100> bs;
-    bs.set(1);
-    std::vector<int> v;
-    v.at(1);
+    xxx_string_pop_back(&s);
+    // xxx_string_assign(&s, "abcde", 5);
+    // xxx_string_append(&s, xxx_string_c_str(&s), xxx_string_length(&s));
+    // printf("%zu %s\n", xxx_string_length(&s), xxx_string_c_str(&s));
+    // std::bitset<100> bs;
+    // bs.set(1);
+    // std::vector<int> v;
 }
 

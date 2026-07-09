@@ -1,0 +1,52 @@
+set(BENCHMARK_ENABLE_TESTING        OFF CACHE BOOL "" FORCE)
+set(BENCHMARK_ENABLE_EXCEPTIONS     OFF  CACHE BOOL "" FORCE)
+set(BENCHMARK_ENABLE_INSTALL        OFF CACHE BOOL "" FORCE)
+set(BENCHMARK_DOWNLOAD_DEPENDENCIES OFF CACHE BOOL "" FORCE)
+
+set(BENCHMARK_DIR "${PROJECT_SOURCE_DIR}/third_party/benchmark")
+
+if (EXISTS "${BENCHMARK_DIR}/CMakeLists.txt")
+
+    message(STATUS "Using local benchmark: ${BENCHMARK_DIR}")
+
+    add_subdirectory(
+        ${BENCHMARK_DIR}
+        ${CMAKE_BINARY_DIR}/benchmark-build
+    )
+
+else()
+
+    message(STATUS "Fetching benchmark from GitHub")
+
+    include(FetchContent)
+
+    FetchContent_Declare(
+        benchmark
+        GIT_REPOSITORY https://github.com/google/benchmark.git
+        GIT_TAG        v1.9.4
+    )
+
+    FetchContent_MakeAvailable(benchmark)
+
+endif()
+
+set(BENCHMARK_SOURCES
+    bm_xxx_array.cpp
+    bm_xxx_string.cpp
+)
+
+add_executable(xxx_benchmark
+    ${BENCHMARK_SOURCES}
+)
+
+target_link_libraries(xxx_benchmark
+    PRIVATE
+        xxx
+        benchmark::benchmark_main
+)
+
+target_compile_options(xxx_benchmark
+    PRIVATE
+        -Wall
+        -Wextra
+)

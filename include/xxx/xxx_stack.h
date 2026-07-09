@@ -3,15 +3,12 @@
 
 #include <stdbool.h>
 
+#include "xxx_config.h"
 #include "xxx_array.h"
 #include "xxx_assert.h"
 
 #ifndef XXX_STACK_DEBUG
-#  ifdef DEBUG
-#    define XXX_STACK_DEBUG 1
-#  else
-#    define XXX_STACK_DEBUG 0
-#  endif
+#  define XXX_STACK_DEBUG XXX_DEBUG
 #endif
 
 #ifndef XXX_STACK_ASSERT

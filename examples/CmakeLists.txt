@@ -1,0 +1,18 @@
+set(EXAMPLE_SOURCES
+)
+
+add_executable(xxx_main
+    ${EXAMPLE_SOURCES}
+    main.cpp
+)
+
+target_link_libraries(xxx_main
+    PRIVATE
+        xxx
+)
+
+target_compile_options(xxx_main
+    PRIVATE
+        -Wall
+        -Wextra
+)
