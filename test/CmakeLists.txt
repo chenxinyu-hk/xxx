@@ -1,0 +1,20 @@
+set(TEST_SOURCES
+    test_xxx_string.cpp
+    test_xxx_bitset.cpp
+)
+
+add_executable(xxx_test
+    test_main.cpp
+    ${TEST_SOURCES}
+)
+
+target_link_libraries(xxx_test
+    PRIVATE
+        xxx
+)
+
+target_compile_options(xxx_test
+    PRIVATE
+        -Wall
+        -Wextra
+)

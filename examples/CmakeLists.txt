@@ -1,17 +1,17 @@
 set(EXAMPLE_SOURCES
 )
 
-add_executable(xxx_main
+add_executable(main
     ${EXAMPLE_SOURCES}
     main.cpp
 )
 
-target_link_libraries(xxx_main
+target_link_libraries(main
     PRIVATE
         xxx
 )
 
-target_compile_options(xxx_main
+target_compile_options(main
     PRIVATE
         -Wall
         -Wextra
