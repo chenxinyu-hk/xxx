@@ -23,6 +23,9 @@ TEST(xxx_bitset_reserve) {
     ASSERT(xxx_bitset_reserve(&bitset, 99) == 0);
     ASSERT(xxx_bitset_capacity(&bitset) == 1024);
 
+    ASSERT(xxx_bitset_reserve(&bitset, 9) == 0);
+    ASSERT(xxx_bitset_capacity(&bitset) == 1024);
+
     ASSERT(xxx_bitset_empty(&bitset));
     ASSERT(xxx_bitset_count(&bitset) == 0);
 }

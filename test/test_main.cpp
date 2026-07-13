@@ -16,7 +16,7 @@ int main() {
 
             if (g_ctx.failed) {
                 ++failed;
-                printf("[ NOT OK ] %s: %s:%d: %s\n",
+                printf("[ NOT OK ] %-*s %s:%d: %s\n", 25,
                         test->name(), g_ctx.file, g_ctx.line, g_ctx.msg);
                 g_ctx.reset();
             } else {

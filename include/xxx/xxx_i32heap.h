@@ -67,6 +67,7 @@ void xxx_i32maxheap_sift_up(int *arr, size_t len, size_t i) {
     XXX_I32HEAP_ASSERT(i < len, "index %zu out of range [0, %zu)", i, len);
 #endif
 
+    (void)len;
     int target = arr[i];
     size_t curr = i;
     while (curr > 0) {
@@ -207,6 +208,7 @@ void xxx_i32minheap_sift_up(int *arr, size_t len, size_t i) {
     XXX_I32HEAP_ASSERT(i < len, "index %zu out of range [0, %zu)", i, len);
 #endif
 
+    (void)len;
     int target = arr[i];
     size_t curr = i;
     while (curr > 0) {
