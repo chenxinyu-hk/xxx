@@ -24,7 +24,7 @@
 #  define XXX_STRING_REALLOC XXX_REALLOC
 #endif
 
-#define XXX_STRING_CAPACITY_MAX ((size_t)0x7fffffff)
+#define XXX_STRING_CAPACITY_MAX ((size_t)INT_MAX)
 
 // #define XXX_STRING_INITIALIZER {{0}, 0x80}
 

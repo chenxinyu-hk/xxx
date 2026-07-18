@@ -24,7 +24,7 @@
 #  define XXX_BITSET_REALLOC XXX_REALLOC
 #endif
 
-#define XXX_BITSET_CAPACITY_MAX ((size_t)0x7fffffc0)
+#define XXX_BITSET_CAPACITY_MAX ((size_t)INT_MAX & ~(size_t)63)
 
 #ifdef __cplusplus
 extern "C" {
@@ -69,6 +69,7 @@ struct xxx_bitset {
     };
 };
 
+#define XXX_BITSET_IS_ALIGNED(n) (((n) & 63) == 0)
 #define XXX_BITSET_ALIGN(n) ((n + 63) & ~(size_t)63)
 
 static inline
@@ -84,7 +85,7 @@ int xxx_long_bitset_grow(xxx_bitset_t *self, size_t new_cap) {
         "bitset must be in long representation");
 
     XXX_BITSET_ASSERT(
-        new_cap == XXX_BITSET_ALIGN(new_cap),
+        XXX_BITSET_IS_ALIGNED(new_cap),
         "new capacity %zu must be 64-bit aligned", new_cap);
 
     XXX_BITSET_ASSERT(
@@ -116,7 +117,7 @@ int xxx_short_bitset_grow(xxx_bitset_t *self, size_t new_cap) {
         "bitset must be in short representation");
 
     XXX_BITSET_ASSERT(
-        new_cap == XXX_BITSET_ALIGN(new_cap),
+        XXX_BITSET_IS_ALIGNED(new_cap),
         "new capacity %zu must be 64-bit aligned", new_cap);
 
     XXX_BITSET_ASSERT(

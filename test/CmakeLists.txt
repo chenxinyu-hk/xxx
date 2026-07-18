@@ -1,8 +1,9 @@
 set(TEST_SOURCES
     test_xxx_i32array.cpp
     test_xxx_string.cpp
-    test_xxx_bitset.cpp
+    test_xxx_i32queue.cpp
     test_xxx_i32heap.cpp
+    test_xxx_bitset.cpp
 )
 
 add_executable(xxx_test

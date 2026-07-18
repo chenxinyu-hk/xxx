@@ -23,7 +23,7 @@
 #  define XXX_I32ARRAY_REALLOC XXX_REALLOC
 #endif
 
-#define XXX_I32ARRAY_CAPACITY_MAX ((size_t)0x7fffffff)
+#define XXX_I32ARRAY_CAPACITY_MAX ((size_t)INT_MAX)
 
 // #define XXX_I32ARRAY_INITIALIZER {0, 0, 0}
 

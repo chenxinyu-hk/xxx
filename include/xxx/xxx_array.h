@@ -23,7 +23,7 @@
 #  define XXX_ARRAY_REALLOC XXX_REALLOC
 #endif
 
-#define XXX_ARRAY_CAPACITY_MAX ((size_t)0x7fffffff)
+#define XXX_ARRAY_CAPACITY_MAX ((size_t)INT_MAX)
 
 // #define XXX_ARRAY_INITIALIZER {0, 0, 0}
 
@@ -189,7 +189,7 @@ int xxx_array_push_back(xxx_array_t *self, void *x) {
         if (self->cap == XXX_ARRAY_CAPACITY_MAX) {
             return -1;
         }
-        size_t new_cap = self->cap > 8 ? self->cap << 1 : 16;
+        size_t new_cap = self->cap > 8 ? self->cap * 2 : 16;
         if (new_cap > XXX_ARRAY_CAPACITY_MAX) {
             new_cap = XXX_ARRAY_CAPACITY_MAX;
         }
