@@ -3,31 +3,33 @@
 
 TEST(xxx_i32array_reserve) {
     xxx_i32array_t arr;
-    xxx_i32array_init(&arr);
+    ASSERT(xxx_i32array_init(&arr) == 0);
     DEFER(xxx_i32array_deinit(&arr));
 
     ASSERT(xxx_i32array_empty(&arr));
     ASSERT(xxx_i32array_length(&arr) == 0);
     ASSERT(xxx_i32array_capacity(&arr) == 0);
 
-    ASSERT(xxx_i32array_reserve(&arr, SIZE_MAX) != 0, "out of range");
+    ASSERT(xxx_i32array_reserve(&arr, XXX_I32ARRAY_CAPACITY_MAX + 1) != 0, "out of range");
+
+    ASSERT(xxx_i32array_reserve(&arr, 0) == 0);
+    ASSERT(xxx_i32array_capacity(&arr) == 0);
 
     ASSERT(xxx_i32array_reserve(&arr, 10) == 0);
-    ASSERT(xxx_i32array_length(&arr) == 0);
     ASSERT(xxx_i32array_capacity(&arr) == 10);
 
     ASSERT(xxx_i32array_reserve(&arr, 100) == 0);
-    ASSERT(xxx_i32array_length(&arr) == 0);
     ASSERT(xxx_i32array_capacity(&arr) == 100);
 
     ASSERT(xxx_i32array_reserve(&arr, 10) == 0);
-    ASSERT(xxx_i32array_length(&arr) == 0);
     ASSERT(xxx_i32array_capacity(&arr) == 100);
+
+    ASSERT(xxx_i32array_reserve(&arr, XXX_I32ARRAY_CAPACITY_MAX) == 0);
 }
 
 TEST(xxx_i32array_assign) {
     xxx_i32array_t arr;
-    xxx_i32array_init(&arr);
+    ASSERT(xxx_i32array_init(&arr) == 0);
     DEFER(xxx_i32array_deinit(&arr));
 
     int a[100];
@@ -51,7 +53,7 @@ TEST(xxx_i32array_assign) {
 
 TEST(xxx_i32array_push_back) {
     xxx_i32array_t arr;
-    xxx_i32array_init(&arr);
+    ASSERT(xxx_i32array_init(&arr) == 0);
     DEFER(xxx_i32array_deinit(&arr));
 
     ASSERT(xxx_i32array_push_back(&arr, 0) == 0);

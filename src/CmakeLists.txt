@@ -1,8 +1,8 @@
-set(EXAMPLE_SOURCES
+set(SRC_SOURCES
 )
 
 add_executable(main
-    ${EXAMPLE_SOURCES}
+    ${SRC_SOURCES}
     main.cpp
 )
 
@@ -15,4 +15,8 @@ target_compile_options(main
     PRIVATE
         -Wall
         -Wextra
+)
+
+set_target_properties(main PROPERTIES
+    RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/"
 )

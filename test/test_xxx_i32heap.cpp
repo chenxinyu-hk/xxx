@@ -14,7 +14,7 @@ TEST(xxx_i32maxheap_build) {
 
 TEST(xxx_i32maxheap_push) {
     xxx_i32maxheap_t heap;
-    xxx_i32maxheap_init(&heap);
+    ASSERT(xxx_i32maxheap_init(&heap) == 0);
     DEFER(xxx_i32maxheap_deinit(&heap));
 
     int arr[] = {8, 3, 2, 7, 0, 1, 4, 9, 4, 5};
@@ -34,7 +34,7 @@ TEST(xxx_i32maxheap_push) {
 
 TEST(xxx_i32maxheap_pop) {
     xxx_i32maxheap_t heap;
-    xxx_i32maxheap_init(&heap);
+    ASSERT(xxx_i32maxheap_init(&heap) == 0);
     DEFER(xxx_i32maxheap_deinit(&heap));
 
     int arr[] = {8, 3, 2, 7, 0, 1, 4, 9, 4, 5};

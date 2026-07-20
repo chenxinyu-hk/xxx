@@ -3,7 +3,7 @@
 
 TEST(xxx_string_reserve) {
     xxx_string_t str;
-    xxx_string_init(&str);
+    ASSERT(xxx_string_init(&str) == 0);
     DEFER(xxx_string_deinit(&str));
 
     ASSERT(xxx_string_empty(&str));
@@ -29,7 +29,7 @@ TEST(xxx_string_reserve) {
 
 TEST(xxx_string_assign) {
     xxx_string_t str;
-    xxx_string_init(&str);
+    ASSERT(xxx_string_init(&str) == 0);
     DEFER(xxx_string_deinit(&str));
 
     char s[100];
@@ -54,7 +54,7 @@ TEST(xxx_string_assign) {
 
 TEST(xxx_string_push_back) {
     xxx_string_t str;
-    xxx_string_init(&str);
+    ASSERT(xxx_string_init(&str) == 0);
     DEFER(xxx_string_deinit(&str));
 
     for (size_t i = 0; i < XXX_SHORT_STRING_CAPACITY; ++i) {
@@ -74,7 +74,7 @@ TEST(xxx_string_push_back) {
 
 TEST(xxx_string_append) {
     xxx_string_t str;
-    xxx_string_init(&str);
+    ASSERT(xxx_string_init(&str) == 0);
     DEFER(xxx_string_deinit(&str));
 
     char s[100];

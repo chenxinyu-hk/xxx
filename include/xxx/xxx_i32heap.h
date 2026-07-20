@@ -35,6 +35,8 @@ static inline void xxx_i32maxheap_pop(xxx_i32maxheap_t *self);
 static inline void xxx_i32maxheap_clear(xxx_i32maxheap_t *self);
 
 static inline void xxx_i32maxheap_build(int *arr, size_t len);
+static inline void xxx_i32maxheap_sift_up(int *arr, size_t len, size_t i);
+static inline void xxx_i32maxheap_sift_down(int *arr, size_t len, size_t i);
 
 typedef struct xxx_i32minheap xxx_i32minheap_t;
 
@@ -52,6 +54,10 @@ static inline void xxx_i32minheap_pop(xxx_i32minheap_t *self);
 static inline void xxx_i32minheap_clear(xxx_i32minheap_t *self);
 
 static inline void xxx_i32minheap_build(int *arr, size_t len);
+static inline void xxx_i32minheap_sift_up(int *arr, size_t len, size_t i);
+static inline void xxx_i32minheap_sift_down(int *arr, size_t len, size_t i);
+
+typedef xxx_i32maxheap_t xxx_i32heap_t;
 
 #ifdef __cplusplus
 }
@@ -60,6 +66,14 @@ static inline void xxx_i32minheap_build(int *arr, size_t len);
 struct xxx_i32maxheap {
     xxx_i32array_t arr;
 };
+
+static inline
+void xxx_i32maxheap_build(int *arr, size_t len) {
+    size_t i = len / 2;
+    while (i > 0) {
+        xxx_i32maxheap_sift_down(arr, len, --i);
+    }
+}
 
 static inline
 void xxx_i32maxheap_sift_up(int *arr, size_t len, size_t i) {
@@ -104,14 +118,6 @@ void xxx_i32maxheap_sift_down(int *arr, size_t len, size_t i) {
         curr = largest;
     }
     arr[curr] = target;
-}
-
-static inline
-void xxx_i32maxheap_build(int *arr, size_t len) {
-    size_t i = len / 2;
-    while (i > 0) {
-        xxx_i32maxheap_sift_down(arr, len, --i);
-    }
 }
 
 static inline
@@ -203,6 +209,14 @@ struct xxx_i32minheap {
 };
 
 static inline
+void xxx_i32minheap_build(int *arr, size_t len) {
+    size_t i = len / 2;
+    while (i > 0) {
+        xxx_i32minheap_sift_down(arr, len, --i);
+    }
+}
+
+static inline
 void xxx_i32minheap_sift_up(int *arr, size_t len, size_t i) {
 #if XXX_I32HEAP_DEBUG
     XXX_I32HEAP_ASSERT(i < len, "index %zu out of range [0, %zu)", i, len);
@@ -245,14 +259,6 @@ void xxx_i32minheap_sift_down(int *arr, size_t len, size_t i) {
         curr = largest;
     }
     arr[curr] = target;
-}
-
-static inline
-void xxx_i32minheap_build(int *arr, size_t len) {
-    size_t i = len / 2;
-    while (i > 0) {
-        xxx_i32minheap_sift_down(arr, len, --i);
-    }
 }
 
 static inline

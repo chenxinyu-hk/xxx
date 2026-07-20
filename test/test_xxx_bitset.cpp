@@ -3,7 +3,7 @@
 
 TEST(xxx_bitset_reserve) {
     xxx_bitset_t bitset;
-    xxx_bitset_init(&bitset);
+    ASSERT(xxx_bitset_init(&bitset) == 0);
     DEFER(xxx_bitset_deinit(&bitset));
 
     ASSERT(xxx_bitset_reserve(&bitset, SIZE_MAX) != 0, "out of memory");
@@ -32,7 +32,7 @@ TEST(xxx_bitset_reserve) {
 
 TEST(xxx_bitset_set) {
     xxx_bitset_t bitset;
-    xxx_bitset_init(&bitset);
+    ASSERT(xxx_bitset_init(&bitset) == 0);
     DEFER(xxx_bitset_deinit(&bitset));
 
     ASSERT(!xxx_bitset_test(&bitset, SIZE_MAX));
@@ -74,7 +74,7 @@ TEST(xxx_bitset_set) {
 
 TEST(xxx_bitset_reset) {
     xxx_bitset_t bitset;
-    xxx_bitset_init(&bitset);
+    ASSERT(xxx_bitset_init(&bitset) == 0);
     DEFER(xxx_bitset_deinit(&bitset));
 
     ASSERT(xxx_bitset_reset(&bitset, SIZE_MAX) != 0, "out of range");
@@ -112,7 +112,7 @@ TEST(xxx_bitset_reset) {
 
 TEST(xxx_bitset_flip) {
     xxx_bitset_t bitset;
-    xxx_bitset_init(&bitset);
+    ASSERT(xxx_bitset_init(&bitset) == 0);
     DEFER(xxx_bitset_deinit(&bitset));
 
     ASSERT(xxx_bitset_flip(&bitset, SIZE_MAX) != 0, "out of range");

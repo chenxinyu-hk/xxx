@@ -23,17 +23,14 @@ target_include_directories(xxx
 )
 
 option(XXX_BUILD_TESTS "Build tests" ON)
-option(XXX_BUILD_EXAMPLES "Build examples" ON)
 option(XXX_BUILD_BENCHMARKS "Build benchmarks" OFF)
 
 if (XXX_BUILD_TESTS)
     add_subdirectory(test)
 endif()
 
-if (XXX_BUILD_EXAMPLES)
-    add_subdirectory(examples)
-endif()
-
 if (XXX_BUILD_BENCHMARKS)
     add_subdirectory(benchmark)
 endif()
+
+add_subdirectory(src)
