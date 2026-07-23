@@ -15,6 +15,10 @@ static inline void xxx_i32heapsort(int *arr, size_t len);
 static inline void xxx_i32heapsort_asc(int *arr, size_t len);
 static inline void xxx_i32heapsort_desc(int *arr, size_t len);
 
+static inline void xxx_i32insertionsort(int *arr, size_t len);
+static inline void xxx_i32insertionsort_asc(int *arr, size_t len);
+static inline void xxx_i32insertionsort_desc(int *arr, size_t len);
+
 #ifdef __cplusplus
 }
 #endif
@@ -27,10 +31,15 @@ void xxx_i32swap(int *x, int *y) {
 }
 
 static inline
+void xxx_i32quicksort(int *arr, size_t len) {
+    xxx_i32quicksort_asc(arr, len);
+}
+
+static inline
 size_t xxx_i32partition_asc(int *arr, size_t len) {
     int pivot = arr[len / 2];
-    size_t i = 0;
-    size_t j = len - 1;
+    int i = 0;
+    int j = len - 1;
     while (1) {
         while (arr[i] < pivot) {
             ++i;
@@ -45,6 +54,27 @@ size_t xxx_i32partition_asc(int *arr, size_t len) {
         ++i;
         --j;
     }
+}
+
+static inline
+void xxx_i32quicksort_asc_impl(int *arr, size_t len) {
+    size_t pivot = xxx_i32partition_asc(arr, len);
+    size_t left_len = pivot + 1;
+    if (left_len > 1) {
+        xxx_i32quicksort_asc_impl(arr, left_len);
+    }
+    size_t right_len = len - left_len;
+    if (right_len > 1) {
+        xxx_i32quicksort_asc_impl(arr + pivot + 1, right_len);
+    }
+}
+
+static inline
+void xxx_i32quicksort_asc(int *arr, size_t len) {
+    if (len <= 1) {
+        return;
+    }
+    xxx_i32quicksort_asc_impl(arr, len);
 }
 
 static inline
@@ -69,40 +99,16 @@ size_t xxx_i32partition_desc(int *arr, size_t len) {
 }
 
 static inline
-void xxx_i32quicksort_asc_impl(int *arr, size_t len) {
-    size_t pivot = xxx_i32partition_asc(arr, len);
-    if (pivot > 1) {
-        xxx_i32quicksort_asc_impl(arr, pivot);
-    }
-    size_t right_len = len - pivot - 1;
-    if (right_len > 1) {
-        xxx_i32quicksort_asc_impl(arr + pivot + 1, right_len);
-    }
-}
-
-static inline
 void xxx_i32quicksort_desc_impl(int *arr, size_t len) {
     size_t pivot = xxx_i32partition_desc(arr, len);
-    if (pivot > 1) {
-        xxx_i32quicksort_desc_impl(arr, pivot);
+    size_t left_len = pivot + 1;
+    if (left_len > 1) {
+        xxx_i32quicksort_desc_impl(arr, left_len);
     }
-    size_t right_len = len - pivot - 1;
+    size_t right_len = len - left_len;
     if (right_len > 1) {
         xxx_i32quicksort_desc_impl(arr + pivot + 1, right_len);
     }
-}
-
-static inline
-void xxx_i32quicksort(int *arr, size_t len) {
-    xxx_i32quicksort_asc(arr, len);
-}
-
-static inline
-void xxx_i32quicksort_asc(int *arr, size_t len) {
-    if (len <= 1) {
-        return;
-    }
-    xxx_i32quicksort_asc_impl(arr, len);
 }
 
 static inline
@@ -133,6 +139,37 @@ void xxx_i32heapsort_desc(int *arr, size_t len) {
     while (len > 1) {
         xxx_i32swap(&arr[0], &arr[--len]);
         xxx_i32minheap_sift_down(arr, len, 0);
+    }
+}
+
+static inline
+void xxx_i32insertionsort(int *arr, size_t len) {
+    xxx_i32insertionsort_asc(arr, len);
+}
+
+static inline
+void xxx_i32insertionsort_asc(int *arr, size_t len) {
+    for (size_t i = 1; i < len; ++i) {
+        int key = arr[i];
+        size_t j = i;
+        while (j > 0 && arr[j - 1] > key) {
+            arr[j] = arr[j - 1];
+            --j;
+        }
+        arr[j] = key;
+    }
+}
+
+static inline
+void xxx_i32insertionsort_desc(int *arr, size_t len) {
+    for (size_t i = 1; i < len; ++i) {
+        int key = arr[i];
+        size_t j = i;
+        while (j > 0 && arr[j - 1] < key) {
+            arr[j] = arr[j - 1];
+            --j;
+        }
+        arr[j] = key;
     }
 }
 

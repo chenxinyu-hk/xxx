@@ -147,8 +147,8 @@ static inline
 void xxx_string_deinit(xxx_string_t *self) {
     if (!xxx_string_isshort(self)) {
         XXX_STRING_FREE(self->l.buf);
-        self->l.buf = NULL;
     }
+    self->s.len = XXX_SHORT_STRING_FLAG;
 }
 
 static inline
@@ -190,11 +190,14 @@ int xxx_string_copy(xxx_string_t *dst, const xxx_string_t *src) {
 
 static inline
 void xxx_string_move(xxx_string_t *dst, xxx_string_t *src) {
+    if (dst == src) {
+        return;
+    }
     if (!xxx_string_isshort(dst)) {
         XXX_STRING_FREE(dst->l.buf);
     }
     *dst = *src;
-    src->l.buf = NULL;
+    src->s.len = XXX_SHORT_STRING_FLAG;
 }
 
 static inline

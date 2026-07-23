@@ -67,7 +67,7 @@ size_t xxx_i32queue_ceil_pow2(size_t n) {
     if (xxx_i32queue_is_pow2(n)) {
         return n;
     }
-    return (size_t)1 << (__CHAR_BIT__ * sizeof(size_t) - __builtin_clzl((n) - 1));
+    return (size_t)1 << (8 * sizeof(size_t) - __builtin_clzl((n)));
 }
 
 /*
@@ -147,6 +147,9 @@ static inline
 void xxx_i32queue_deinit(xxx_i32queue_t *self) {
     XXX_I32QUEUE_FREE(self->buf);
     self->buf = NULL;
+    self->cap = 0;
+    self->tail = 0;
+    self->head = 0;
 }
 
 static inline
@@ -173,9 +176,15 @@ int xxx_i32queue_copy(xxx_i32queue_t *dst, const xxx_i32queue_t *src) {
 
 static inline
 void xxx_i32queue_move(xxx_i32queue_t *dst, xxx_i32queue_t *src) {
+    if (dst == src) {
+        return;
+    }
     XXX_I32QUEUE_FREE(dst->buf);
     *dst = *src;
     src->buf = NULL;
+    src->cap = 0;
+    src->tail = 0;
+    src->head = 0;
 }
 
 static inline

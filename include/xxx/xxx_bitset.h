@@ -153,8 +153,9 @@ static inline
 void xxx_bitset_deinit(xxx_bitset_t *self) {
     if (!xxx_bitset_isshort(self)) {
         XXX_BITSET_FREE(self->l.words);
-        self->l.words = NULL;
     }
+    self->s.words[0] = 0;
+    self->s.words[1] = XXX_SHORT_BITSET_FLAG;
 }
 
 static inline
@@ -198,11 +199,15 @@ int xxx_bitset_copy(xxx_bitset_t *dst, const xxx_bitset_t *src) {
 
 static inline
 void xxx_bitset_move(xxx_bitset_t *dst, xxx_bitset_t *src) {
+    if (dst == src) {
+        return;
+    }
     if (!xxx_bitset_isshort(dst)) {
         XXX_BITSET_FREE(dst->l.words);
     }
     *dst = *src;
-    src->l.words = NULL;
+    src->s.words[0] = 0;
+    src->s.words[1] = XXX_SHORT_BITSET_FLAG;
 }
 
 static inline

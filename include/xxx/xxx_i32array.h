@@ -97,6 +97,8 @@ static inline
 void xxx_i32array_deinit(xxx_i32array_t *self) {
     XXX_I32ARRAY_FREE(self->buf);
     self->buf = NULL;
+    self->len = 0;
+    self->cap = 0;
 }
 
 static inline
@@ -109,9 +111,14 @@ int xxx_i32array_copy(xxx_i32array_t *dst, const xxx_i32array_t *src) {
 
 static inline
 void xxx_i32array_move(xxx_i32array_t *dst, xxx_i32array_t *src) {
+    if (dst == src) {
+        return;
+    }
     XXX_I32ARRAY_FREE(dst->buf);
     *dst = *src;
     src->buf = NULL;
+    src->len = 0;
+    src->cap = 0;
 }
 
 static inline
