@@ -35,8 +35,8 @@ static inline void xxx_i32maxheap_pop(xxx_i32maxheap_t *self);
 static inline void xxx_i32maxheap_clear(xxx_i32maxheap_t *self);
 
 static inline void xxx_i32maxheap_build(int *arr, size_t len);
-static inline void xxx_i32maxheap_sift_up(int *arr, size_t len, size_t i);
-static inline void xxx_i32maxheap_sift_down(int *arr, size_t len, size_t i);
+static inline void xxx_i32maxheap_sift_up(int *arr, size_t len, size_t pos);
+static inline void xxx_i32maxheap_sift_down(int *arr, size_t len, size_t pos);
 
 typedef struct xxx_i32minheap xxx_i32minheap_t;
 
@@ -54,8 +54,8 @@ static inline void xxx_i32minheap_pop(xxx_i32minheap_t *self);
 static inline void xxx_i32minheap_clear(xxx_i32minheap_t *self);
 
 static inline void xxx_i32minheap_build(int *arr, size_t len);
-static inline void xxx_i32minheap_sift_up(int *arr, size_t len, size_t i);
-static inline void xxx_i32minheap_sift_down(int *arr, size_t len, size_t i);
+static inline void xxx_i32minheap_sift_up(int *arr, size_t len, size_t pos);
+static inline void xxx_i32minheap_sift_down(int *arr, size_t len, size_t pos);
 
 typedef xxx_i32maxheap_t xxx_i32heap_t;
 
@@ -76,14 +76,14 @@ void xxx_i32maxheap_build(int *arr, size_t len) {
 }
 
 static inline
-void xxx_i32maxheap_sift_up(int *arr, size_t len, size_t i) {
+void xxx_i32maxheap_sift_up(int *arr, size_t len, size_t pos) {
 #if XXX_I32HEAP_DEBUG
-    XXX_I32HEAP_ASSERT(i < len, "index %zu out of range [0, %zu)", i, len);
+    XXX_I32HEAP_ASSERT(pos < len, "index %zu out of range [0, %zu)", pos, len);
 #endif
 
     (void)len;
-    int target = arr[i];
-    size_t curr = i;
+    int target = arr[pos];
+    size_t curr = pos;
     while (curr > 0) {
         size_t prev = (curr - 1) / 2;
         if (arr[prev] >= target) {
@@ -96,13 +96,13 @@ void xxx_i32maxheap_sift_up(int *arr, size_t len, size_t i) {
 }
 
 static inline
-void xxx_i32maxheap_sift_down(int *arr, size_t len, size_t i) {
+void xxx_i32maxheap_sift_down(int *arr, size_t len, size_t pos) {
 #if XXX_I32HEAP_DEBUG
-    XXX_I32HEAP_ASSERT(i < len, "index %zu out of range [0, %zu)", i, len);
+    XXX_I32HEAP_ASSERT(pos < len, "index %zu out of range [0, %zu)", pos, len);
 #endif
 
-    int target = arr[i];
-    size_t curr = i;
+    int target = arr[pos];
+    size_t curr = pos;
     size_t half = len / 2;
     while (curr < half) {
         size_t left = curr * 2 + 1;
@@ -217,14 +217,14 @@ void xxx_i32minheap_build(int *arr, size_t len) {
 }
 
 static inline
-void xxx_i32minheap_sift_up(int *arr, size_t len, size_t i) {
+void xxx_i32minheap_sift_up(int *arr, size_t len, size_t pos) {
 #if XXX_I32HEAP_DEBUG
-    XXX_I32HEAP_ASSERT(i < len, "index %zu out of range [0, %zu)", i, len);
+    XXX_I32HEAP_ASSERT(pos < len, "index %zu out of range [0, %zu)", pos, len);
 #endif
 
     (void)len;
-    int target = arr[i];
-    size_t curr = i;
+    int target = arr[pos];
+    size_t curr = pos;
     while (curr > 0) {
         size_t prev = (curr - 1) / 2;
         if (arr[prev] <= target) {
@@ -237,13 +237,13 @@ void xxx_i32minheap_sift_up(int *arr, size_t len, size_t i) {
 }
 
 static inline
-void xxx_i32minheap_sift_down(int *arr, size_t len, size_t i) {
+void xxx_i32minheap_sift_down(int *arr, size_t len, size_t pos) {
 #if XXX_I32HEAP_DEBUG
-    XXX_I32HEAP_ASSERT(i < len, "index %zu out of range [0, %zu)", i, len);
+    XXX_I32HEAP_ASSERT(pos < len, "index %zu out of range [0, %zu)", pos, len);
 #endif
 
-    int target = arr[i];
-    size_t curr = i;
+    int target = arr[pos];
+    size_t curr = pos;
     size_t half = len / 2;
     while (curr < half) {
         size_t left = curr * 2 + 1;

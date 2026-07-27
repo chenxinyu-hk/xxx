@@ -330,11 +330,6 @@ int xxx_i32rbtree_insert(xxx_i32rbtree_t *self, int key) {
 }
 
 static inline
-void xxx_i32rbtree_erase(xxx_i32rbtree_t *self, int key) {
-
-}
-
-static inline
 void xxx_i32rbtree_clear(xxx_i32rbtree_t *self) {
     xxx_i32rbtree_destroy_nodes(self->root, self->nil);
     self->root = self->nil;
@@ -342,3 +337,112 @@ void xxx_i32rbtree_clear(xxx_i32rbtree_t *self) {
 }
 
 #endif
+
+static inline
+void xxx_i32rbtree_erase(xxx_i32rbtree_t *self, int key) {
+
+}
+
+static inline
+xxx_i32rbtree_iter_t xxx_i32rbtree_begin(xxx_i32rbtree_t *self) {
+    xxx_i32rbtree_node_t *x = self->root;
+    while (x->left != self->nil) {
+        x = x->left;
+    }
+    return x;
+}
+
+static inline
+xxx_i32rbtree_iter_t xxx_i32rbtree_end(xxx_i32rbtree_t *self) {
+    return self->nil;
+}
+
+static inline
+xxx_i32rbtree_iter_t xxx_i32rbtree_next(xxx_i32rbtree_t *self, xxx_i32rbtree_iter_t iter) {
+    xxx_i32rbtree_node_t *nil = self->nil;
+    if (iter == nil) {
+        return nil;
+    }
+    if (iter->right != nil) {
+        iter = iter->right;
+        while (iter->left != nil) {
+            iter = iter->left;
+        }
+        return iter;
+    }
+    while (iter == iter->parent->right) {
+        iter = iter->parent;
+    }
+    return iter->parent;
+}
+
+static inline
+xxx_i32rbtree_iter_t xxx_i32rbtree_prev(xxx_i32rbtree_t *self, xxx_i32rbtree_iter_t iter) {
+    xxx_i32rbtree_node_t *nil = self->nil;
+    if (iter == nil) {
+        return nil;
+    }
+    if (iter->left != nil) {
+        iter = iter->left;
+        while (iter->right != nil) {
+            iter = iter->right;
+        }
+        return iter;
+    }
+    while (iter == iter->parent->left) {
+        iter = iter->parent;
+    }
+    return iter->parent;
+}
+
+static inline
+xxx_i32rbtree_iter_t xxx_i32rbtree_find(xxx_i32rbtree_t *self, int key) {
+    xxx_i32rbtree_node_t *nil = self->nil;
+    xxx_i32rbtree_node_t *x = self->root;
+    while (x != nil) {
+        if (key == x->key) {
+            return x;
+        }
+        if (key < x->key) {
+            x = x->left;
+        } else {
+            x = x->right;
+        }
+    }
+    return nil;
+}
+
+static inline
+xxx_i32rbtree_iter_t xxx_i32rbtree_lower_bound(xxx_i32rbtree_t *self, int key) {
+    xxx_i32rbtree_node_t *nil = self->nil;
+    xxx_i32rbtree_node_t *x = self->root;
+    xxx_i32rbtree_node_t *y = nil;
+    while (x != nil) {
+        if (key == x->key) {
+            return x;
+        }
+        if (key < x->key) {
+            y = x;
+            x = x->left;
+        } else {
+            x = x->right;
+        }
+    }
+    return y;
+}
+
+static inline
+xxx_i32rbtree_iter_t xxx_i32rbtree_upper_bound(xxx_i32rbtree_t *self, int key) {
+    xxx_i32rbtree_node_t *nil = self->nil;
+    xxx_i32rbtree_node_t *x = self->root;
+    xxx_i32rbtree_node_t *y = nil;
+    while (x != nil) {
+        if (key < x->key) {
+            y = x;
+            x = x->left;
+        } else {
+            x = x->right;
+        }
+    }
+    return y;
+}

@@ -73,34 +73,20 @@ size_t xxx_i32queue_ceil_pow2(size_t n) {
 /*
  * Undefined behavior if dst overlaps the contents of src.
  */
-// static inline
-// void xxx_i32queue_copy_linear(int *dst, const xxx_i32queue_t *src) {
-//     size_t head = src->head & (src->cap - 1);
-//     size_t tail = src->tail & (src->cap - 1);
-//     if (tail >= head) {
-//         memcpy(dst, src->buf + head, (src->tail - src->head) * sizeof (int));
-//     } else {
-//         size_t size1 = src->cap - head;
-//         size_t size2 = tail;
-//         memcpy(dst, src->buf + head, size1 * sizeof(int));
-//         memcpy(dst + size1, src->buf, size2 * sizeof(int));
-//     }
-// }
-
 static inline
 void xxx_i32queue_copy_linear(int *dst, const xxx_i32queue_t *src) {
     size_t size = src->tail - src->head;
+    if (size == 0) {
+        return;
+    }
     size_t head = src->head & (src->cap - 1);
-
     size_t size1 = src->cap - head;
     if (size1 > size) {
         size1 = size;
     }
-
     memcpy(dst, src->buf + head, size1 * sizeof(int));
-
     size_t size2 = size - size1;
-    if (size2 != 0) {
+    if (size2 > 0) {
         memcpy(dst + size1, src->buf, size2 * sizeof(int));
     }
 }
