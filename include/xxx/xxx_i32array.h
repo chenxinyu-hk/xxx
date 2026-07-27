@@ -254,7 +254,8 @@ int xxx_i32array_push_back(xxx_i32array_t *self, int x) {
             return -1;
         }
     }
-    self->buf[self->len++] = x;
+    self->buf[self->len] = x;
+    ++self->len;
     return 0;
 }
 

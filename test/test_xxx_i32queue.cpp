@@ -10,7 +10,7 @@ TEST(xxx_i32queue_reserve) {
     ASSERT(xxx_i32queue_size(&que) == 0);
     ASSERT(xxx_i32queue_capacity(&que) == 0);
 
-    ASSERT(xxx_i32queue_reserve(&que, XXX_I32QUEUE_CAPACITY_MAX + 1) != 0);
+    ASSERT(xxx_i32queue_reserve(&que, XXX_I32DEQUE_CAPACITY_MAX + 1) != 0);
 
     ASSERT(xxx_i32queue_reserve(&que, 0) == 0);
     ASSERT(xxx_i32queue_capacity(&que) == 0);
@@ -31,8 +31,8 @@ TEST(xxx_i32queue_reserve) {
     ASSERT(xxx_i32queue_reserve(&que, 16) == 0);
     ASSERT(xxx_i32queue_capacity(&que) == 64);
 
-    ASSERT(xxx_i32queue_reserve(&que, XXX_I32QUEUE_CAPACITY_MAX) == 0);
-    ASSERT(xxx_i32queue_capacity(&que) == XXX_I32QUEUE_CAPACITY_MAX);
+    ASSERT(xxx_i32queue_reserve(&que, XXX_I32DEQUE_CAPACITY_MAX) == 0);
+    ASSERT(xxx_i32queue_capacity(&que) == XXX_I32DEQUE_CAPACITY_MAX);
 }
 
 TEST(xxx_i32queue_push) {

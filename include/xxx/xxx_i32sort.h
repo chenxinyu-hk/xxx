@@ -58,22 +58,28 @@ size_t xxx_i32partition_asc(int *arr, size_t len) {
 
 static inline
 void xxx_i32quicksort_asc_impl(int *arr, size_t len) {
-    size_t pivot = xxx_i32partition_asc(arr, len);
-    size_t left_len = pivot + 1;
-    if (left_len > 1) {
-        xxx_i32quicksort_asc_impl(arr, left_len);
+    // size_t p = xxx_i32partition_asc(arr, len);
+    // size_t left_len = p + 1;
+    // if (left_len > 1) {
+    //     xxx_i32quicksort_asc_impl(arr, left_len);
+    // }
+    // size_t right_len = len - left_len;
+    // if (right_len > 1) {
+    //     xxx_i32quicksort_asc_impl(arr + p + 1, right_len);
+    // }
+    if (len <= 1) {
+        return;
     }
-    size_t right_len = len - left_len;
-    if (right_len > 1) {
-        xxx_i32quicksort_asc_impl(arr + pivot + 1, right_len);
-    }
+    size_t p = 1 + xxx_i32partition_asc(arr, len);
+    xxx_i32quicksort_asc_impl(arr, p);
+    xxx_i32quicksort_asc_impl(arr + p, len - p);
 }
 
 static inline
 void xxx_i32quicksort_asc(int *arr, size_t len) {
-    if (len <= 1) {
-        return;
-    }
+    // if (len <= 1) {
+    //     return;
+    // }
     xxx_i32quicksort_asc_impl(arr, len);
 }
 

@@ -465,7 +465,8 @@ int xxx_string_push_back(xxx_string_t *self, char c) {
             }
         }
     }
-    self->l.buf[self->l.len++] = c;
+    self->l.buf[self->l.len] = c;
+    ++self->l.len;
     return 0;
 }
 

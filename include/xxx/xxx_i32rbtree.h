@@ -339,11 +339,6 @@ void xxx_i32rbtree_clear(xxx_i32rbtree_t *self) {
 #endif
 
 static inline
-void xxx_i32rbtree_erase(xxx_i32rbtree_t *self, int key) {
-
-}
-
-static inline
 xxx_i32rbtree_iter_t xxx_i32rbtree_begin(xxx_i32rbtree_t *self) {
     xxx_i32rbtree_node_t *x = self->root;
     while (x->left != self->nil) {
@@ -446,3 +441,70 @@ xxx_i32rbtree_iter_t xxx_i32rbtree_upper_bound(xxx_i32rbtree_t *self, int key) {
     }
     return y;
 }
+
+
+static inline
+void xxx_i32rbtree_erase(xxx_i32rbtree_t *self, int key) {
+    xxx_i32rbtree_node_t *nil = self->nil;
+    xxx_i32rbtree_node_t *x = self->root;
+    while (x != nil) {
+        if (key == x->key) {
+            xxx_i32rbtree_erase_node(self, x);
+            return;
+        }
+        if (key < x->key) {
+            x = x->left;
+        } else {
+            x = x->right;
+        }
+    }
+}
+
+static inline
+void xxx_i32rbtree_erase_node(xxx_i32rbtree_t *self, xxx_i32rbtree_iter_t x) {
+    xxx_i32rbtree_node_t *nil = self->nil;
+    if (x->right != nil) {
+        xxx_i32rbtree_node_t *y = x->right;
+        while (y->left != nil) {
+            y = y->left;
+        }
+        x->key = y->key;
+        x = y;
+    } else if (x->left != nil) {
+        xxx_i32rbtree_node_t *y = x->left;
+        while (y->right != nil) {
+            y = y->right;
+        }
+        x->key = y->key;
+        x = y;
+    }
+    if (x->color == XXX_I32RBTREE_RED) {
+        if (x->parent->left == x) {
+            x->parent->left = nil;
+        } else {
+            x->parent->right = nil;
+        }
+        XXX_I32RBTREE_FREE(x);
+    } else if (x->right != nil) {
+        x->key = x->right->key;
+        XXX_I32RBTREE_FREE(x->right);
+        x->right = nil;
+    } else if (x->left != nil) {
+        x->key = x->left->key;
+        XXX_I32RBTREE_FREE(x->left);
+        x->left = nil;
+    } else {
+        if (x == self->root) {
+            XXX_I32RBTREE_FREE(x);
+            self->root = nil;
+        } else {
+            // xxx_i32rbtree_delete_fixup(x);
+            // ...
+        }
+    }
+    --self->size;
+}
+
+// static inline
+// void xxx_i32rbtree_erase_node_impl(xxx_i32rbtree_t *self, xxx_i32rbtree_iter_t x) {
+// }
