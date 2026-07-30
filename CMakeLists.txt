@@ -23,7 +23,7 @@ target_include_directories(xxx
 )
 
 option(XXX_BUILD_TESTS "Build tests" ON)
-option(XXX_BUILD_BENCHMARKS "Build benchmarks" OFF)
+option(XXX_BUILD_BENCHMARKS "Build benchmarks" ON)
 
 if (XXX_BUILD_TESTS)
     add_subdirectory(test)

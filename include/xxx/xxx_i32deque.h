@@ -63,7 +63,7 @@ struct xxx_i32deque {
 
 static inline
 bool xxx_i32deque_is_pow2(size_t n) {
-    return ((n) & ((n) - 1)) == 0;
+    return (n & (n - 1)) == 0;
 }
 
 static inline
@@ -71,7 +71,7 @@ size_t xxx_i32deque_ceil_pow2(size_t n) {
     if (xxx_i32deque_is_pow2(n)) {
         return n;
     }
-    return (size_t)1 << (8 * sizeof(size_t) - __builtin_clzl((n)));
+    return (size_t)1 << (8 * sizeof(size_t) - __builtin_clzl(n));
 }
 
 /*

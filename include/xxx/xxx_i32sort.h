@@ -35,93 +35,105 @@ void xxx_i32quicksort(int *arr, size_t len) {
     xxx_i32quicksort_asc(arr, len);
 }
 
-static inline
-size_t xxx_i32partition_asc(int *arr, size_t len) {
-    int pivot = arr[len / 2];
-    int i = 0;
-    int j = len - 1;
-    while (1) {
-        while (arr[i] < pivot) {
-            ++i;
-        }
-        while (arr[j] > pivot) {
-            --j;
-        }
-        if (i >= j) {
-            return j;
-        }
-        xxx_i32swap(&arr[i], &arr[j]);
-        ++i;
-        --j;
-    }
-}
+// static inline
+// size_t xxx_i32partition_asc(int *arr, size_t len) {
+//     int pivot = arr[len / 2];
+//     int i = 0;
+//     int j = len - 1;
+//     while (1) {
+//         while (arr[i] < pivot) {
+//             ++i;
+//         }
+//         while (arr[j] > pivot) {
+//             --j;
+//         }
+//         if (i >= j) {
+//             return j;
+//         }
+//         xxx_i32swap(&arr[i], &arr[j]);
+//         ++i;
+//         --j;
+//     }
+// }
 
 static inline
 void xxx_i32quicksort_asc_impl(int *arr, size_t len) {
-    // size_t p = xxx_i32partition_asc(arr, len);
-    // size_t left_len = p + 1;
-    // if (left_len > 1) {
-    //     xxx_i32quicksort_asc_impl(arr, left_len);
-    // }
-    // size_t right_len = len - left_len;
-    // if (right_len > 1) {
-    //     xxx_i32quicksort_asc_impl(arr + p + 1, right_len);
-    // }
     if (len <= 1) {
         return;
     }
-    size_t p = 1 + xxx_i32partition_asc(arr, len);
-    xxx_i32quicksort_asc_impl(arr, p);
-    xxx_i32quicksort_asc_impl(arr + p, len - p);
+    int pivot = arr[len / 2];
+    int lt = 0;
+    int gt = len - 1;
+    int i = 0;
+    while (i <= gt) {
+        if (arr[i] < pivot) {
+            xxx_i32swap(&arr[lt], &arr[i]);
+            ++lt;
+            ++i;
+        } else if (arr[i] > pivot) {
+            xxx_i32swap(&arr[gt], &arr[i]);
+            --gt;
+        } else {
+            ++i;
+        }
+    }
+    xxx_i32quicksort_asc_impl(arr, lt);
+    xxx_i32quicksort_asc_impl(arr + gt + 1, len - gt - 1);
 }
 
 static inline
 void xxx_i32quicksort_asc(int *arr, size_t len) {
-    // if (len <= 1) {
-    //     return;
-    // }
     xxx_i32quicksort_asc_impl(arr, len);
 }
 
-static inline
-size_t xxx_i32partition_desc(int *arr, size_t len) {
-    int pivot = arr[len / 2];
-    size_t i = 0;
-    size_t j = len - 1;
-    while (1) {
-        while (arr[i] > pivot) {
-            ++i;
-        }
-        while (arr[j] < pivot) {
-            --j;
-        }
-        if (i >= j) {
-            return j;
-        }
-        xxx_i32swap(&arr[i], &arr[j]);
-        ++i;
-        --j;
-    }
-}
+// static inline
+// size_t xxx_i32partition_desc(int *arr, size_t len) {
+//     int pivot = arr[len / 2];
+//     size_t i = 0;
+//     size_t j = len - 1;
+//     while (1) {
+//         while (arr[i] > pivot) {
+//             ++i;
+//         }
+//         while (arr[j] < pivot) {
+//             --j;
+//         }
+//         if (i >= j) {
+//             return j;
+//         }
+//         xxx_i32swap(&arr[i], &arr[j]);
+//         ++i;
+//         --j;
+//     }
+// }
 
 static inline
 void xxx_i32quicksort_desc_impl(int *arr, size_t len) {
-    size_t pivot = xxx_i32partition_desc(arr, len);
-    size_t left_len = pivot + 1;
-    if (left_len > 1) {
-        xxx_i32quicksort_desc_impl(arr, left_len);
+    if (len <= 1) {
+        return;
     }
-    size_t right_len = len - left_len;
-    if (right_len > 1) {
-        xxx_i32quicksort_desc_impl(arr + pivot + 1, right_len);
+    int pivot = arr[len / 2];
+    int lt = 0;
+    int gt = len - 1;
+    int i = 0;
+    while (i <= gt) {
+        if (arr[i] > pivot) {
+            xxx_i32swap(&arr[lt], &arr[i]);
+            ++lt;
+            ++i;
+        } else if (arr[i] < pivot) {
+            xxx_i32swap(&arr[gt], &arr[i]);
+            --gt;
+        } else {
+            ++i;
+        }
     }
+    xxx_i32quicksort_asc_impl(arr, lt);
+    xxx_i32quicksort_asc_impl(arr + gt + 1, len - gt - 1);
 }
 
 static inline
 void xxx_i32quicksort_desc(int *arr, size_t len) {
-    if (len <= 1) {
-        return;
-    }
     xxx_i32quicksort_desc_impl(arr, len);
 }
 
