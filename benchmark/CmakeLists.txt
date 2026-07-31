@@ -32,8 +32,9 @@ endif()
 
 set(BENCHMARK_SOURCES
     bm_xxx_string.cpp
-    bm_xxx_array.cpp
+    bm_xxx_i32array.cpp
     bm_xxx_i32hashtable.cpp
+    bm_xxx_i32i32hashtable.cpp
 )
 
 add_executable(xxx_benchmark
