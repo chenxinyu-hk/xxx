@@ -1,6 +1,7 @@
 #ifndef XXX_I32I32HASHTABLE_H
 #define XXX_I32I32HASHTABLE_H
 
+#include <limits.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>

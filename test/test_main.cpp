@@ -10,7 +10,7 @@ int main() {
         printf("========== %s ==========\n", it.first.c_str());
 
         for (TestFactory factory : it.second) {
-            std::unique_ptr<TestBase> test(factory());
+            TestBase* test = factory();
 
             test->run();
 
@@ -23,6 +23,8 @@ int main() {
                 ++passed;
                 printf("[     OK ] %s\n", test->name());
             }
+
+            delete test;
         }
 
         printf("\n");

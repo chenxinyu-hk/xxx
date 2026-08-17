@@ -1,6 +1,7 @@
 #ifndef XXX_I32ARRAY_H
 #define XXX_I32ARRAY_H
 
+#include <limits.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <string.h>

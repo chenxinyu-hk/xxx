@@ -1,6 +1,7 @@
 #ifndef XXX_STRING_H
 #define XXX_STRING_H
 
+#include <limits.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
