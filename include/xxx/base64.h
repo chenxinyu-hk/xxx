@@ -27,7 +27,7 @@ int xxx_base64_encode(
     const void *in_buf, size_t in_len,
     char *out_buf, size_t out_cap, size_t *out_len)
 {
-    if (in_len > (SIZE_MAX - 1) / 4 * 3) {
+    if (in_len > ((size_t)-1 - 1) / 4 * 3) {
         return -1;
     }
     size_t required = (in_len + 2) / 3 * 4 + 1;

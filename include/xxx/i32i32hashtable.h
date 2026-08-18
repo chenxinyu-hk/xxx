@@ -291,11 +291,11 @@ int xxx_i32i32hashtable_insert(xxx_i32i32hashtable_t *self, int key, int value) 
     uint8_t h2_ctrl = (uint8_t)(hash >> 24 | 1);
     size_t mask = self->bucket_count - 1;
     size_t pos = hash & mask;
-    size_t insert_pos = SIZE_MAX;
+    size_t insert_pos = self->bucket_count;
     for (size_t i = 0; i < self->bucket_count; ++i) {
         uint8_t ctrl = self->ctrl[pos];
         if (ctrl == 0) {
-            if (insert_pos == SIZE_MAX) {
+            if (insert_pos == self->bucket_count) {
                 insert_pos = pos;
             }
             self->entries[insert_pos].key = key;
@@ -309,7 +309,7 @@ int xxx_i32i32hashtable_insert(xxx_i32i32hashtable_t *self, int key, int value) 
                 self->entries[pos].value = value;
                 return 0;
             }
-        } else if (insert_pos == SIZE_MAX) {
+        } else if (insert_pos == self->bucket_count) {
             insert_pos = pos;
         }
         pos = (pos + 1) & mask;
