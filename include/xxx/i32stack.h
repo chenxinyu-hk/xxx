@@ -1,7 +1,7 @@
 #ifndef XXX_I32STACK_H
 #define XXX_I32STACK_H
 
-#include "xxx_i32array.h"
+#include "xxx/i32array.h"
 
 // #define XXX_I32STACK_INITIALIZER { XXX_I32ARRAY_INITIALIZER }
 

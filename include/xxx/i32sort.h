@@ -1,7 +1,7 @@
 #ifndef XXX_I32SORT_H
 #define XXX_I32SORT_H
 
-#include "xxx_i32heap.h"
+#include "xxx/i32heap.h"
 
 #ifdef __cplusplus
 extern "C" {

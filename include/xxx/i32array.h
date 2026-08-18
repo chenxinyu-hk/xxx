@@ -6,9 +6,9 @@
 #include <stddef.h>
 #include <string.h>
 
-#include "xxx_config.h"
-#include "xxx_allocator.h"
-#include "xxx_assert.h"
+#include "xxx/config.h"
+#include "xxx/allocator.h"
+#include "xxx/assert.h"
 
 #ifndef XXX_I32ARRAY_DEBUG
 #  define XXX_I32ARRAY_DEBUG XXX_DEBUG

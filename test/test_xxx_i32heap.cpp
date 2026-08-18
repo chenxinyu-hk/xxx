@@ -1,5 +1,5 @@
 #include "test.h"
-#include "xxx/xxx_i32heap.h"
+#include "xxx/i32heap.h"
 
 TEST(xxx_i32maxheap_build) {
     int arr[] = {8, 3, 2, 7, 0, 1, 4, 9, 4, 5};

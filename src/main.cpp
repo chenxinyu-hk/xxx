@@ -1,13 +1,13 @@
-#include "xxx/xxx_string.h"
-#include "xxx/xxx_i32array.h"
-#include "xxx/xxx_i32hashtable.h"
-#include "xxx/xxx_i32i32hashtable.h"
-#include "xxx/xxx_i32stack.h"
-#include "xxx/xxx_i32queue.h"
-#include "xxx/xxx_i32heap.h"
-#include "xxx/xxx_i32sort.h"
-#include "xxx/xxx_bitset.h"
-#include "xxx/xxx_base64.h"
+#include "xxx/string.h"
+#include "xxx/i32array.h"
+#include "xxx/i32hashtable.h"
+#include "xxx/i32i32hashtable.h"
+#include "xxx/i32stack.h"
+#include "xxx/i32queue.h"
+#include "xxx/i32heap.h"
+#include "xxx/i32sort.h"
+#include "xxx/bitset.h"
+#include "xxx/base64.h"
 
 // _Atomic int c;
 
@@ -289,14 +289,14 @@
 // }
 
 #include <stdio.h>
-#include <string>
-#include <vector>
-#include <unordered_set>
-#include <unordered_map>
-#include <stack>
-#include <queue>
+// #include <string>
+// #include <vector>
+// #include <unordered_set>
+// #include <unordered_map>
+// #include <stack>
+// #include <queue>
 
-using namespace std;
+// using namespace std;
 
 int main() {
     char in_buf[] = "g28g8dgyxgwy7171881";

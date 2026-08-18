@@ -1,5 +1,5 @@
 #include "test.h"
-#include "xxx/xxx_string.h"
+#include "xxx/string.h"
 
 TEST(xxx_string_reserve) {
     xxx_string_t str;

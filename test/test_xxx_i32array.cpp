@@ -1,5 +1,5 @@
 #include "test.h"
-#include "xxx/xxx_i32array.h"
+#include "xxx/i32array.h"
 
 TEST(xxx_i32array_reserve) {
     xxx_i32array_t arr;

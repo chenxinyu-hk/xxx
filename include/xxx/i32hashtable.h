@@ -7,10 +7,10 @@
 #include <stdint.h>
 #include <string.h>
 
-#include "xxx_config.h"
-#include "xxx_allocator.h"
-#include "xxx_assert.h"
-#include "xxx_hash.h"
+#include "xxx/config.h"
+#include "xxx/allocator.h"
+#include "xxx/assert.h"
+#include "xxx/hash.h"
 
 #ifndef XXX_I32HASHTABLE_DEBUG
 #  define XXX_I32HASHTABLE_DEBUG XXX_DEBUG

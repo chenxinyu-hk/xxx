@@ -1,7 +1,7 @@
 #include <benchmark/benchmark.h>
 #include <unordered_set>
 
-#include "xxx/xxx_i32hashtable.h"
+#include "xxx/i32hashtable.h"
 
 namespace {
 

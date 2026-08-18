@@ -1,7 +1,7 @@
 #ifndef XXX_I32HEAP_H
 #define XXX_I32HEAP_H
 
-#include "xxx_i32array.h"
+#include "xxx/i32array.h"
 
 #ifdef __cplusplus
 extern "C" {

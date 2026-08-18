@@ -1,7 +1,7 @@
 #include <benchmark/benchmark.h>
 #include <unordered_map>
 
-#include "xxx/xxx_i32i32hashtable.h"
+#include "xxx/i32i32hashtable.h"
 
 namespace {
 

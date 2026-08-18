@@ -1,5 +1,5 @@
 #include "test.h"
-#include "xxx/xxx_i32hashtable.h"
+#include "xxx/i32hashtable.h"
 
 TEST(xxx_i32hashtable_insert) {
     xxx_i32hashtable_t set;

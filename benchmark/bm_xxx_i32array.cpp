@@ -1,7 +1,7 @@
 #include <benchmark/benchmark.h>
 #include <vector>
 
-#include "xxx/xxx_i32array.h"
+#include "xxx/i32array.h"
 
 namespace {
 

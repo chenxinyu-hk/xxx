@@ -1,6 +1,6 @@
 #include "test.h"
-#include "xxx/xxx_i32sort.h"
-#include "xxx/xxx_i32array.h"
+#include "xxx/i32sort.h"
+#include "xxx/i32array.h"
 
 TEST(xxx_i32quicksort_asc) {
     xxx_i32array_t arr;

@@ -1,7 +1,7 @@
 #ifndef XXX_I32QUEUE_H
 #define XXX_I32QUEUE_H
 
-#include "xxx_i32deque.h"
+#include "xxx/i32deque.h"
 
 #ifdef __cplusplus
 extern "C" {

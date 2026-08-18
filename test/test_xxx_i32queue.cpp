@@ -1,5 +1,5 @@
 #include "test.h"
-#include "xxx/xxx_i32queue.h"
+#include "xxx/i32queue.h"
 
 TEST(xxx_i32queue_reserve) {
     xxx_i32queue_t que;

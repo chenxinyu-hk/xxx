@@ -1,5 +1,5 @@
 #include "test.h"
-#include "xxx/xxx_bitset.h"
+#include "xxx/bitset.h"
 
 TEST(xxx_bitset_reserve) {
     xxx_bitset_t bitset;
