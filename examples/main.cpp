@@ -300,8 +300,10 @@
 // using namespace std;
 
 int main() {
-    char in_buf[] = "g28g8dgyxgwy7171881";
+    char in_buf[] = "a+181919j3691196199812363828283723927392 ns";
     char out_buf[1024];
-    xxx_base64_encode(in_buf, sizeof(in_buf), out_buf, sizeof(out_buf), NULL);
+    xxx_base64_encode(in_buf, strlen(in_buf), out_buf, sizeof(out_buf), NULL);
+    printf("%s\n", out_buf);
+    xxx_base64_decode(out_buf, strlen(out_buf), out_buf, sizeof(out_buf), NULL);
     printf("%s\n", out_buf);
 }

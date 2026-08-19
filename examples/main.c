@@ -13,8 +13,10 @@
 #include "xxx/base64.h"
 
 int main() {
-    char in_buf[] = "g28g8dgyxgwy7171881";
+    char in_buf[] = " ";
     char out_buf[1024];
     xxx_base64_encode(in_buf, sizeof(in_buf), out_buf, sizeof(out_buf), NULL);
+    printf("%s\n", out_buf);
+    xxx_base64_decode(out_buf, strlen(out_buf), out_buf, sizeof(out_buf), NULL);
     printf("%s\n", out_buf);
 }
